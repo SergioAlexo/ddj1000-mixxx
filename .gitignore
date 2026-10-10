@@ -1,0 +1,8 @@
+# USB captures are hundreds of MB to several GB each - not committed.
+captures/
+
+# Generated test track (regenerate with tools/make_test_tracks.py); 20 MB wav.
+testtracks/
+
+__pycache__/
+*.pyc

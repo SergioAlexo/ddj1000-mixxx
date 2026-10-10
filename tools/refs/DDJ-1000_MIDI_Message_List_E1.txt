@@ -1,0 +1,1315 @@
+                                                                                                     DDJ-1000
+
+                                                                                                   List of MIDI message version 1.00
+
+         D10-L D11-L D12-L                            D13-L D14-L                 B1-L            M18       M17-3       M17-1       M17-2       M17-4              M8 D10-R D11-R D12-R                           D13-R D14-R       B1-R
+
+         D15-L                                                                                                 M3-3         M3-1         M3-2         M3-4              D15-R
+         D6-L                                                                                                                                                           D6-R
+                                                                            B2-L                        M22-3        M22-1        M22-2        M22-4            M21                                                     B2-R
+         D2-L                                                               B3-L                                                                                                                                        B3-R
+         D1-L
+                                                                                                               M4-3         M4-1         M4-2         M4-4
+
+                                                                                                  M14          M5-3         M5-1         M5-2         M5-4
+                                                                                                                            M6-1         M6-2         M6-4
+                D3-L                                                                                                        F1-1         F1-2         F1-4                               D3-R
+
+                                                                                                  M15          M6-3                                                M10
+                                                                                                               F1-3                                                M9
+                                                                                               F2       F3
+                                                                                                                                                                       F6
+                                                                                               F4       F5                                                             F7
+                                                                                                                                                                    F8
+                                                                                  D7-L            M19          M7-3         M7-1         M7-2         M7-4                                                                          D7-R
+                                                                                                  M20                                                               F9
+                D19-L                                                                                                                                                          D2-R  D19-R
+                D18-L                                                                             M12                                                                                D18-R
+                D16-L                                                                             M13                                                              F10               D16-R
+                D17-L                                                                                                                                                                D17-R
+
+                                                                                                               M2-3         M2-1         M2-2         M2-4
+
+                P9-L P10-L P11-L P12-L P13-L P14-L                                       D5-L                                                                                            P9-R P10-R P11-R P12-R P13-R P14-R         D5-R
+                                                                                         D4-L                                                                                                                                       D4-R
+
+                                                                                                               M11-3        M11-1        M11-2        M11-4
+
+                       P1-L  P2-L               P3-L                  P4-L                                                                                                                  P1-R  P2-R      P3-R  P4-R
+
+                       P5-L  P6-L               P7-L                  P8-L               D8-L                                                                      F11  D1-R                P5-R  P6-R      P7-R  P8-R              D8-R
+                                                                                         D9-L                                                                                                                                       D9-R
+                                                                                                                                    M1
+
+                                                                                                        M16-2                                               M16-1
+
+MIDI channel assignment                          MIDI                       Channel No.            1 As a reference for MIDI assign, MIDI message sent from buttons and knobs of this controller are listed in decimal numbers and English scale.
+  MIDI channel is defined as shown below.       Channe                           (Hex)                 Please utilize this reference depending on the notation of your MIDI compatible software.
+  0x9*: Note                                                                       n=0
+  0xB*: Control Change (CC)                          1                             n=1                 NOTE is a term used for MIDI to express that a key of a keyboard or a piano is pressed or your finger is released from it.
+                                                     2                             n=2                 CC is an abbreviation of "Control Change". Control Change is a kind of MIDI message used to communicate many kinds
+                              Channel Category       3                             n=3                 of control information such as sound quality and volume level.
+                                                     4                            m=4                  English scale uses alphabetical letters of C, D, E, F, G, A and B as well as # to indicate halftone.
+DECK 1 (other than PERFORMANCE PAD)                  5                            m=5
+DECK 2 (other than PERFORMANCE PAD)                  6                            m=6
+DECK 3 (other than PERFORMANCE PAD)                  7                             p=7
+DECK 4 (other than PERFORMANCE PAD)                  8                             p=8
+EFFECT                                               9                             p=9
+(No Use)                                            10                             p=A
+BROWSER                                             11                             p=B
+DECK 1 PERFORMANCE PAD (without SHIFT)              12                             p=C
+DECK 1 PERFORMANCE PAD (with SHIFT)                 13                            p=D
+DECK 2 PERFORMANCE PAD (without SHIFT)              14                             p=E
+DECK 2 PERFORMANCE PAD (with SHIFT)                 15
+DECK 3 PERFORMANCE PAD (without SHIFT)
+DECK 3 PERFORMANCE PAD (with SHIFT)
+DECK 4 PERFORMANCE PAD (without SHIFT)
+DECK 4 PERFORMANCE PAD (with SHIFT)
+
+                                                   User Interface                                  MIDI assign reference 1                       MIDI-IN                    MIDI-OUT
+                                                +SHIFT Trigger                                                                               (to computer)             (from computer)
+
+Group    Fig.                                                               Condition            MIDI   NOTE   MIDI Data (Data 1)   Status Data 1 Data 2           Status Data 1 Data 2                           Details (Data 2)
+                                                                             (mode)            Channel                                                             (Hex) (Hex) (Hex)
+                UI name                                                                                 / CC (Dec) (English (Hex) (Hex) (Hex)
+                                                                             DECK 1             (Dec)
+                                                                             DECK 3                                         scale)
+
+BROWSER                                                                      DECK 2            7        CC         64                    B6     40          hh                           Difference count value from previous operated
+                                                                             DECK 4                                                                                                      Turn clockwise : 1  30 (0x01  0x1E)
+                 Rotary                                       rotate                           7        CC         100                   B6     64          hh                           Turn counterclockwise : 127  98 (0x7F  0x62)
+                Selector                        +SHIFT
+         B1-L                                                                                  7        NOTE 70             A#4          96     46          hh                           OFF=0x00, ON=0x7F
+                 Rotary                         +SHIFT press                                                                                                                             OFF=0x00, ON=0x7F
+                Selector                        +SHIFT                                         7        NOTE 93             A6           96     5D          hh                           OFF=0x00, ON=0x7F
+                                                                                                                                                                                         OFF=0x00, ON=0x7F
+                 BACK                                         rotate                           7        NOTE 72             C5           96     48          hh
+                  VIEW                          +SHIFT
+                                                                                               7        NOTE 94             A#6          96     5E          hh
+                                                +SHIFT press
+                                                +SHIFT                                         7        CC         64                    B6     40          hh                           Difference count value from previous operated
+                                                                                                                                                                                         Turn clockwise : 1  30 (0x01  0x1E)
+                                                              press                            7        CC         100                   B6     64          hh                           Turn counterclockwise : 127  98 (0x7F  0x62)
+                                                +SHIFT
+         B1-R                                                                                  7        NOTE 71             B4           96     47          hh                           OFF=0x00, ON=0x7F
+                                                 LONG press                                                                                                                              OFF=0x00, ON=0x7F
+         B2-L                                   +SHIFT                                         7        NOTE 109            C#8          96     6D          hh                           OFF=0x00, ON=0x7F
+         B2-R                                                                                                                                                                            OFF=0x00, ON=0x7F
+         B3-L                                                                                  7        NOTE 73             C#5          96     49          hh                           OFF=0x00, ON=0x7F
+         B3-R                                                                                                                                                                            OFF=0x00, ON=0x7F
+                                                                                               7        NOTE 111            D#8          96     6F          hh                           OFF=0x00, ON=0x7F
+                                                                                                                                                                                         OFF=0x00, ON=0x7F
+                                                                                               7        NOTE 101            F7           96     65          hh                           OFF=0x00, ON=0x7F
+
+                                                                                               7        NOTE 102            F#7          96     66          hh
+
+                                                                                               7        NOTE 122            D9           96     7A          hh
+
+                                                                                               7        NOTE 103            G7           96     67          hh
+
+                                                                                               7        NOTE 104            G#7          96     68          hh
+
+                                                                                                                                    1
+                                         User Interface                        MIDI assign reference 1                            MIDI-IN                 MIDI-OUT
+                                      +SHIFT Trigger                                                                          (to computer)          (from computer)
+
+      Group   Fig.                                   press  Condition         MIDI   NOTE  MIDI Data (Data 1)          Status Data 1 Data 2      Status Data 1 Data 2                     Details (Data 2)
+DECK                                   +SHIFT                (mode)         Channel                                                              (Hex) (Hex) (Hex)
+             D1-L      UI name                                                       / CC (Dec) (English (Hex) (Hex) (Hex)
+MIXER        D1-R   PLAY/PAUSE                       press  Vinyl On         (Dec)                             scale)
+             D2-L                      +SHIFT               Vinyl Off
+             D2-R         CUE                                               1/2/3/4 NOTE 11                    B-1        9n  0B             hh   Same as MIDI-IN      OFF=0x00, ON=0x7F
+                                                                                                                                                  Same as MIDI-IN      OFF=0x00, ON=0x7F
+                                                                            1/2/3/4 NOTE 71                    B4      9n     47             hh   Same as MIDI-IN      OFF=0x00, ON=0x7F
+                                                                                                                                                  Same as MIDI-IN      OFF=0x00, ON=0x7F
+                                                                            1/2/3/4 NOTE 12                    C0         9n  0C             hh
+
+                                                                            1/2/3/4 NOTE 72                    C5         9n  48             hh
+
+                                                                            1/2/3/4 CC     34                          Bn     22             hh                        Difference count value from previous operated
+                                                                                                                                                                       Turn clockwise : Increases from 65 (0x41)
+                                                    rotate                  1/2/3/4 CC     35                          Bn     23             hh                        Turn counterclockwise : Decreases from 63 (0x3F)
+                                      +SEARCH
+                       JOG            +SHIFT                                1/2/3/4 CC     41                          Bn     29             hh
+                    (Platter)
+                                                    touch                   1/2/3/4 CC     31                          Bn     1F             hh
+                       JOG            +SHIFT
+             D3-L   (Platter)                                               1/2/3/4 NOTE 54                    F#3        9n  36             hh                        OFF=0x00, ON=0x7F
+             D3-R                                   rotate                                                                                                             OFF=0x00, ON=0x7F
+                                      +SHIFT                                1/2/3/4 NOTE 103                   G7         9n  67             hh
+
+                                                                            1/2/3/4 CC     33                          Bn     21             hh                        Difference count value from previous operated
+                                                                                                                                                                       Turn clockwise : Increases from 65 (0x41)
+                                                                            1/2/3/4 CC     38                          Bn     26             hh                        Turn counterclockwise : Decreases from 63 (0x3F)
+
+                                                                            1/2/3/4 CC     0                           Bn     00     MSB                               Min (MSB0x00, LSB0x00)  Max (MSB0x7F, LSB0x7F)
+                                                                                                                                                                       "" side : Min (MSB:0x00 LSB:0x00)
+             D4-L   Tempo                            slide                                 32                                 20     LSB                               "" side : Max (MSB:0x7F LSB:0x7F)
+             D4-R                     +SHIFT
+                                                                                                                       Bn     05     MSB
+                                                                            1/2/3/4 CC
+                                                                                                                              25     LSB
+                                                                                                           37
+
+              D5-L  MASTER TEMPO                    press                   1/2/3/4 NOTE 26                    D1         9n  1A             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+             D5-R     DECK SELECT     +SHIFT
+                              1/3                                           1/2/3/4 NOTE 96                    C7         9n  60             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+              D6-L    DECK SELECT                   press
+                              2/4                                 DECK 3    1        NOTE 114                  F#8        92  72             hh                        OFF=0x00, ON=0x7F
+             D6-R       BEAT SYNC                   press         DECK 1
+                                                                  DECK 4    3        NOTE 114                  F#8        92  72             hh                        OFF=0x00, ON=0x7F
+              D7-L       KEY SYNC                   press         DECK 2
+             D7-R                     +SHIFT                                2        NOTE 114                  F#8        93  72             hh                        OFF=0x00, ON=0x7F
+              D8-L      KEY RESET                           Zero  not Zero
+             D8-R                                   press   Not Zero  Zero  4        NOTE 114                  F#8        93  72             hh                        OFF=0x00, ON=0x7F
+              D9-L        LOOP IN     +SHIFT
+             D9-R                                                           1/2/3/4 NOTE 88                    E6         9n  58             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+             D10-L      LOOP OUT                    press
+             D10-R                    +SHIFT                                1/2/3/4 NOTE 92                    G#6        9n  5C             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+             D11-L  4 BEAT LOOP/EXIT
+             D11-R                                  press                   1/2/3/4 NOTE 101                   F7         9n  65             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+             D12-L      QUANTIZE      +SHIFT
+             D12-R                                                          1/2/3/4 NOTE 28                    E1         9n  1C             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+             D13-L           SLIP                   press
+             D13-R                    +SHIFT                                1/2/3/4 NOTE 100                   E7         9n  64             hh                        OFF=0x00, ON=0x7F
+             D14-L    SLIP REVERSE
+             D14-R                                  press                   1/2/3/4 NOTE 31                    G1         9n  1F             hh                        OFF=0x00, ON=0x7F
+             D15-L                    +SHIFT
+             D15-R                                                          1/2/3/4 NOTE 16                    E0         9n  10             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                    press
+                                      +SHIFT                                1/2/3/4 NOTE 76                    E5         9n  4C             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                    press                   1/2/3/4 NOTE 17                    F0         9n  11             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                      +SHIFT
+                                                                            1/2/3/4 NOTE 77                    F5         9n  4D             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                    press
+                                      +SHIFT                                1/2/3/4 NOTE 20                    G#0        9n  14             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                                            1/2/3/4 NOTE 80                    G#5        9n  50             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                                            1/2/3/4 NOTE 53                    F3         9n  35             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                                            1/2/3/4 NOTE 57                    A3         9n  39             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                                            1/2/3/4 NOTE 64                    E4         9n  40             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                                            1/2/3/4 NOTE 23                    B0         9n  17             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                                            1/2/3/4 NOTE 21                    A0         9n  15             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                                            1/2/3/4 NOTE 56                    G#3        9n  38             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+             D16-L                                                          1/2/3/4 NOTE 94                    A#6        9n  5E             hh                        OFF=0x00, ON=0x7F
+             D16-R
+                    SEARCH             LONG press                           1/2/3/4 NOTE 112                   E8         9n  70             hh                        OFF=0x00, ON=0x7F
+                                      +SHIFT
+                                                                            1/2/3/4 NOTE 81                    A5         9n  51             hh                        OFF=0x00, ON=0x7F
+
+             D17-L                                                          1/2/3/4 NOTE 95                    B6         9n  5F             hh                        OFF=0x00, ON=0x7F
+             D17-R
+                    SEARCH             LONG press                           1/2/3/4 NOTE 113                   F8         9n  71             hh                        OFF=0x00, ON=0x7F
+             D18-L    MEMORY          +SHIFT
+             D18-R      SHIFT                                               1/2/3/4 NOTE 83                    B5         9n  53             hh                        OFF=0x00, ON=0x7F
+             D19-L                                  press
+             D19-R                    +SHIFT                                1/2/3/4 NOTE 61                    C#4        9n  3D             hh                        OFF=0x00, ON=0x7F
+
+                                                    press                   1/2/3/4 NOTE 62                    D4         9n  3E             hh                        OFF=0x00, ON=0x7F
+
+                                                                            1/2/3/4 NOTE 63                    D#4        9n  3F             hh                        OFF=0x00, ON=0x7F
+
+             M1     CROSSFADER        slide                                 7        CC    31                          B6     1F     MSB                               Min (MSB0x00, LSB0x00)  Max (MSB0x7F, LSB0x7F)
+                                                                                                                                                                       Min at left side, Max at right side
+                                                                                           63                                 3F     LSB
+
+             M2-1   CH FADER          slide                                 1/2/3/4 CC     19                          Bn     13     MSB                               Min (MSB0x00, LSB0x00)  Max (MSB0x7F, LSB0x7F)
+             M2-2                                                                                                                                                      Min at bottom end, Max at top end
+             M2-3                                                                          51                                 33     LSB
+             M2-4
+
+              M1    CROSS FADER       +SHIFT                                1/2/3/4 NOTE 102                   F#7        9n  66             hh                                   PLAY message only for CH fader start
+             M2-1    / CH FADER                      slide                                                                                                                        OFF=0x00, ON=0x7F
+             M2-2    (Fader Start)                                          1/2/3/4 NOTE 82                    A#5        9n  52             hh
+             M2-3                     +SHIFT                                                                                                                                      CUE message only for CH fader start
+             M2-4                                                                                                                                                                 OFF=0x00, ON=0x7F
+
+             M3-1        GAIN                       rotate                  1/2/3/4 CC                                 Bn     04     MSB                                          Min (MSB0x00, LSB0x00)  Max (MSB0x7F, LSB0x7F)
+             M3-2       (TRIM)                      rotate                                                                                                                        When turned fully counterclockwise : Min
+             M3-3                                   rotate                                 36                                 24     LSB                                          When turned fully clockwise : Max
+             M3-4        EQ HI                      rotate
+             M4-1                                   press                   1/2/3/4 CC                                 Bn     07     MSB                                          Min (MSB0x00, LSB0x00)  Max (MSB0x7F, LSB0x7F)
+             M4-2       EQ MID        +SHIFT                                                                                                                                      When turned fully counterclockwise : Min
+             M4-3                                                                          39                                 27     LSB                                          When turned fully clockwise : Max
+             M4-4      EQ LOW
+             M5-1                                                                                          11          Bn     0B     MSB                                          Min (MSB0x00, LSB0x00)  Max (MSB0x7F, LSB0x7F)
+             M5-2         CUE                                               1/2/3/4 CC                                                                                            When turned fully counterclockwise : Min
+             M5-3   (Headphone)                                                                                               2B     LSB                                          When turned fully clockwise : Max
+             M5-4                                                                                          43
+             M6-1                                                                                                                                                                 Min (MSB0x00, LSB0x00)  Max (MSB0x7F, LSB0x7F)
+             M6-2                                                           1/2/3/4 CC     15                          Bn     0F     MSB                                          When turned fully counterclockwise : Min
+             M6-3                                                                          47                                                                                     When turned fully clockwise : Max
+             M6-4                                                                                                             2F     LSB
+             M7-1                                                                                                                                 Same as MIDI-IN OFF=0x00, ON=0x7F
+             M7-2                                                           1/2/3/4 NOTE 84                    C6         9n  54             hh
+             M7-3                                                                                                                                 Same as MIDI-IN OFF=0x00, ON=0x7F
+             M7-4                                                           1/2/3/4 NOTE 104                   G#7        9n    68    hh
+                                                                                                                                                                                  Min (MSB0x00, LSB0x00)  Max (MSB0x7F, LSB0x7F)
+             M8 MASTER LEVEL          rotate                                7        CC                                B6       08   MSB          Same as MIDI-IN
+                                                                                                                                28   LSB          Same as MIDI-IN LED are lit by itself or by MIDI-OUT
+                                                                                           40                                   63    hh
+                                                                                                                                62    hh                                          Min (MSB0x00, LSB0x00)  Max (MSB0x7F, LSB0x7F)
+             M9     MASTER CUE                      press                   7        NOTE 99                   D#7        96    09   MSB
+             M10    BOOTH LEVEL       +SHIFT                                                                                    29   LSB                                          ON=0x7F
+                                                                            7        NOTE 98                   D7         96    16    7F                                          OFF=0x00
+                                                    rotate                                                                    18/1D   00                                          ON=0x7F
+                                                                            7        CC    9                           B6       1D    7F                                          OFF=0x00
+                                                                                                                              16/18   00                                          ON=0x7F
+                                                                                           41                                   18    7F                                          OFF=0x00
+                                                                                                                              16/1D   00                                          Min (MSB0x00, LSB0x00)  Max (MSB0x7F, LSB0x7F)
+                                                        Switch to A         1/2/3/4 NOTE 22                    A#0        9n    0C   MSB
+                                       slide Switch to THRU                                                                     2C   LSB                                          Min (MSB0x00, LSB0x00)  Max (MSB0x7F, LSB0x7F)
+             M11-1                                                          1/2/3/4 NOTE 24/29 C1/F1 9n                         0D   MSB
+             M11-2                                      Switch to B                                                             2D   LSB                                          Min (MSB0x00, LSB0x00)  Max (MSB0x7F, LSB0x7F)
+             M11-3  CRF ASSIGN        rotate                                1/2/3/4 NOTE 29                    F1         9n                                                      When turned fully counterclockwise : Min
+             M11-4                    rotate                                                                                    07   MSB                                          When turned fully clockwise : Max
+                                                                            1/2/3/4 NOTE 22/24 A#0/C1 9n                        27   LSB                                          Min (MSB0x00, LSB0x00)  Max (MSB0x7F, LSB0x7F)
+                                                                                                                                                                                  When turned fully counterclockwise : Min
+                                                                            1/2/3/4 NOTE 24                    C1         9n                                                      When turned fully clockwise : Max
+
+                                                                            1/2/3/4 NOTE 22/29 A#0/F1 9n
+
+             M12    HEADPHONES                                              7        CC    12                          B6
+             M13        MIXING
+                                                                                           44
+                    HEADPHONES
+                         LEVEL                                              7        CC    13                          B6
+
+                                                                                           45
+
+             M14    MIC EQ HI         rotate                                7        CC    7                           B6
+
+                                                                                           39
+
+             M15 MIC EQ LOW           rotate                                7        CC    15                          B6     0F     MSB
+
+                                                                                           47                                 2F     LSB
+
+                                                                                                                       2
+                                   User Interface                              MIDI assign reference 1                    MIDI-IN                 MIDI-OUT
+                                                                                                                      (to computer)          (from computer)
+
+      Group  Fig.                                        Condition            MIDI   NOTE  MIDI Data (Data 1)  Status Data 1 Data 2      Status Data 1 Data 2                        Details (Data 2)
+MIXER                                                                       Channel                                                      (Hex) (Hex) (Hex)
+                    UI name        +SHIFT Trigger        (mode)                      / CC (Dec) (English (Hex) (Hex) (Hex)
+EFFECT                                                                       (Dec)
+                                                                                                      scale)
+
+             M16-1  LINE/PHONO SW          slide                            3/4 NOTE 70               A#4         9n  46             hh                        Select PHONO : OFF=0x00
+             M16-2                                                                                                                                             Select LINE : ON=0x7F
+                                                                                                                                                               OFF=0x00, ON=0x7F
+                                                          Switch to USB A   1/2/3/4 NOTE 85           C#6         9n  55             7F                        OFF=0x00, ON=0x7F
+                                                                                                                                                               OFF=0x00, ON=0x7F
+             M17-1                                       Switch to LINE or  1/2/3/4 NOTE 86/87 D6/D#6 9n 56/57 00                                              OFF=0x00, ON=0x7F
+             M17-2                                          PHONO/LINE                                                                                         OFF=0x00, ON=0x7F
+             M17-3  INPUT SELECT           slide                            1/2/3/4 NOTE 86           D6          9n  56             7F                        OFF=0x00, ON=0x7F
+             M17-4                                        Switch to USB B                                                                                      OFF=0x00, ON=0x7F
+                                                                            1/2/3/4 NOTE 85/87 C#6/D#6 9n 55/57 00                                             OFF=0x00, ON=0x7F
+                                                                                                                                                               OFF=0x00, ON=0x7F
+                                                                            1/2/3/4 NOTE 87           D#6         9n  57             7F                        OFF=0x00, ON=0x7F
+                                                                                                                                                               OFF=0x00, ON=0x7F
+                                                                            1/2/3/4 NOTE 85/86 C#6/D6 9n 55/56 00                                              OFF=0x00, ON=0x7F
+                                                                                                                                                               OFF=0x00, ON=0x7F
+                                                         Switch to OFF      7        NOTE 106         A#7         96  6A             7F                        OFF=0x00, ON=0x7F
+                                                                                                                                                               Min (MSB0x00, LSB0x00)  Max (MSB0x7F, LSB0x7F)
+                                                         Switch to ON       7        NOTE 107/108 B7/C8           96 6B/6C 00                                  When turned fully counterclockwise : Min
+                                                            Switch to                                                                                          When turned fully clockwise : Max
+             M18    MIC OFF/ON             slide                            7        NOTE 107         B7          96  6B             7F
+                    /TALKOVER                             TALK OVER
+                                                                            7        NOTE 106/108 A#7/C8 96 6A/6C 00
+
+                                                                            7        NOTE 108         C8          96  6C             7F
+
+                                                                            7        NOTE 106/107 A#7/B7 96 6A/6B 00
+
+             M19    SAMPLER CUE                  press                      7        NOTE 105         A7          96  69             hh   Same as MIDI-IN
+                                   +SHIFT                                                                                                 Same as MIDI-IN
+                                                                            7        NOTE 110         D8          96  6E             hh
+
+             M20 SAMPLER VOL               rotate                           7        CC    3                   B6     03  MSB
+
+                                                                                           35                         23  LSB
+
+              M21   MASTER LEVEL                    -                                                                                                          without MIDI-control
+             M22-1         METER                    -
+             M22-2                               rotate                     1/2/3/4 CC     2                                             Bn  02  hh Use when INPUT Selector is "USB A" or "USB B"
+             M22-3  CHANNEL LEVEL                rotate
+             M22-4         METER                 rotate                     7                     23           B6     17  MSB                                  Min (MSB0x00, LSB0x00)  Max (MSB0x7F, LSB0x7F)
+                                                 rotate                              CC                                                                        When turned fully counterclockwise : Min
+              F1-1      COLOR FX                 rotate                                                               37  LSB                                  When turned fully clockwise : Max
+              F1-2      Parameter  +SHIFT                                                         55
+              F1-3                               rotate
+              F1-4          (CH1)  +SHIFT                                   7        CC    24                  B6     18  MSB                                  Min (MSB0x00, LSB0x00)  Max (MSB0x7F, LSB0x7F)
+                        COLOR FX                 rotate                                                                                                        When turned fully counterclockwise : Min
+                F2      Parameter  +SHIFT                                                  56                         38  LSB                                  When turned fully clockwise : Max
+                F3                               rotate
+                F4          (CH2)  +SHIFT                                   7        CC    25                  B6     19  MSB                                  Min (MSB0x00, LSB0x00)  Max (MSB0x7F, LSB0x7F)
+                F5      COLOR FX                 press                                                                                                         When turned fully counterclockwise : Min
+                        Parameter  +SHIFT                                                  57                         39  LSB                                  When turned fully clockwise : Max
+                                                 press
+                            (CH3)  +SHIFT                                   7                     26           B6     1A  MSB                                  Min (MSB0x00, LSB0x00)  Max (MSB0x7F, LSB0x7F)
+                        COLOR FX                                                     CC                                                                        When turned fully counterclockwise : Min
+                        Parameter                rotate                                                               3A  LSB                                  When turned fully clockwise : Max
+                                                                                                  58                                                           OFF=0x00, ON=0x7F
+                            (CH4)                rotate                                                                                                        OFF=0x00, ON=0x7F
+                        COLOR FX                                            7        NOTE  0          C-1         96  00             hh                        OFF=0x00, ON=0x7F
+                        (D-ECHO)                                                                                                                               OFF=0x00, ON=0x7F
+                        COLOR FX                                            7        NOTE  8          G#-1        96  08             hh                        OFF=0x00, ON=0x7F
+                                                                                                                                                               OFF=0x00, ON=0x7F
+                          (PITCH)                                           7        NOTE  1          C#-1        96  01             hh
+                        COLOR FX
+                          (NOISE)                                           7        NOTE  9          A-1         96  09             hh
+                        COLOR FX
+                         (FILTER)                                           7        NOTE  2          D-1         96  02             hh
+
+                                                                            7        NOTE 10          A#-1        96  0A             hh
+
+                                                                            7        NOTE  3          D#-1        96  03             hh                        OFF=0x00, ON=0x7F
+
+                                                                            7        NOTE 11          B-1         96  0B             hh                        OFF=0x00, ON=0x7F
+
+             F6     BEAT                                                    5        NOTE 74          D5          94  4A             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                                            5        NOTE 102         F#7         94  66             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+             F7     BEAT                                                    5        NOTE 75          D#5         94  4B             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                                            5        NOTE 107         B7          94  6B             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                    FX SELECT                                               5        NOTE 32          G#1         94  20             hh                        OFF=0x00, ON=0x7F
+
+                    (LOW CUT
+
+                    FX SELECT                                               5        NOTE 33          A1          94  21             hh                        OFF=0x00, ON=0x7F
+
+                    (ECHO)
+
+                    FX SELECT                                               5        NOTE 34          A#1         94  22             hh                        OFF=0x00, ON=0x7F
+
+                    (MT DELAY)
+
+                    FX SELECT                                               5        NOTE 35          B1          94  23             hh                        OFF=0x00, ON=0x7F
+
+                    (SPIRAL)
+
+                    FX SELECT                                               5        NOTE 36          C2          94  24             hh                        OFF=0x00, ON=0x7F
+
+                    (REVERB)
+
+                    FX SELECT                                               5        NOTE 37          C#2         94  25             hh                        OFF=0x00, ON=0x7F
+
+                    (TRANS)
+
+                    FX SELECT                                               5        NOTE 38          D2          94  26             hh                        OFF=0x00, ON=0x7F
+
+             F8     (ENIGMA JET)
+
+                    FX SELECT                                               5        NOTE 39          D#2         94  27             hh                        OFF=0x00, ON=0x7F
+
+                    (FLANGER)
+
+                    FX SELECT                                               5        NOTE 40          E2          94  28             hh                        OFF=0x00, ON=0x7F
+
+                    (PHASER)
+
+                    FX SELECT                                               5        NOTE 41          F2          94  29             hh                        OFF=0x00, ON=0x7F
+
+                    (PITCH)
+
+                    FX SELECT                                               5        NOTE 42          F#2         94  2A             hh                        OFF=0x00, ON=0x7F
+
+                    (SLPI ROLL)
+
+                    FX SELECT                                               5        NOTE 43          G2          94  2B             hh                        OFF=0x00, ON=0x7F
+
+                    (ROLL)
+
+                    FX SELECT                                               5        NOTE 44          G#2         94  2C             hh                        OFF=0x00, ON=0x7F
+
+                    (MOBIUS SAW)
+
+                    FX SELECT                                               5        NOTE 45          A2          94  2D             hh                        OFF=0x00, ON=0x7F
+
+                    (MOBIUS TRI)
+
+                    CH SELECT                                               5        NOTE 16          E0          94  10             hh                        OFF=0x00, ON=0x7F
+
+                    (CH1)
+
+                    CH SELECT                                               5        NOTE 17          F0          94  11             hh                        OFF=0x00, ON=0x7F
+
+                    (CH2)
+
+                    CH SELECT                                               5        NOTE 18          F#0         94  12             hh                        OFF=0x00, ON=0x7F
+
+                    (CH3)
+
+             F9     CH SELECT                                               5        NOTE 19          G0          94  13             hh                        OFF=0x00, ON=0x7F
+
+                    (CH4)
+
+                    CH SELECT                                               5        NOTE 20          G#0         94  14             hh                        OFF=0x00, ON=0x7F
+
+                    (MASTER)
+
+                    CH SELECT                                               5        NOTE 21          A0          94  15             hh                        OFF=0x00, ON=0x7F
+
+                    (MIC)
+
+                    CH SELECT                                               5        NOTE 22          A#0         94  16             hh                        OFF=0x00, ON=0x7F
+
+                    (SAMPLER)
+
+             F10 LEVEL/DEPTH               rotate                           5        CC    2                   B4     02  MSB                                  Min (MSB0x00, LSB0x00)  Max (MSB0x7F, LSB0x7F)
+                                                                                                                                                               When turned fully counterclockwise : Min
+                                                                                           34                         22  LSB                                  When turned fully clockwise : Max
+
+             F11    FX ON/OFF              press                            5        NOTE 71          B4          94  47             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   +SHIFT                                   5        NOTE 67          G4          94  43             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                                                                               3
+                           User Interface                   MIDI assign reference 1                           MIDI-IN            MIDI-OUT
+                                                                                                          (to computer)      (from computer)
+
+     Group  Fig.                           Condition          MIDI   NOTE    MIDI Data (Data 1)    Status Data 1 Data 2 Status Data 1 Data 2                     Details (Data 2)
+                                                            Channel
+                  UI name  +SHIFT Trigger  (mode)                    / CC (Dec) (English (Hex) (Hex) (Hex) (Hex) (Hex) (Hex)
+                                                             (Dec)
+                                                                                           scale)
+
+PAD                                        HOT CUE          8/10/12/14 NOTE  0             C-1        9p  00             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   mode (PAGE 1)                                                                                       MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+
+                           +SHIFT                           9/11/13/15 NOTE  0             C-1        9p  00             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   HOT CUE          8/10/12/14 NOTE  8             G#-1       9p  08             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE  8             G#-1       9p  08             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   PAD FX           8/10/12/14 NOTE 16             E0         9p  10             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode 1 (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 16             E0         9p  10             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   PAD FX           8/10/12/14 NOTE 24             C1         9p  18             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode 1 (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 24             C1         9p  18             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press      BEAT JUMP 8/10/12/14 NOTE      32            G#1        9p  20             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                           mode (PAGE 1)                                                                                                          MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+
+                           +SHIFT                           9/11/13/15 NOTE 32             G#1        9p  20             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   BEAT JUMP 8/10/12/14 NOTE 40                    E2         9p  28             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 40             E2         9p  28             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   SAMPLER          8/10/12/14 NOTE 48             C3         9p  30             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 48             C3         9p  30             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   SAMPLER          8/10/12/14 NOTE 56             G#3        9p  38             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+            P1    PAD 1    +SHIFT                                     9/11/13/15 NOTE 56   G#3        9p  38             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   KEYBOARD 8/10/12/14 NOTE 64                     E4         9p  40             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                                     9/11/13/15 NOTE 64   E4         9p  40             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   KEYBOARD 8/10/12/14 NOTE 72                     C5         9p  48             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 72             C5         9p  48             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   PAD FX           8/10/12/14 NOTE  80            G#5        9p  50             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode 2 (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 80             G#5        9p  50             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   PAD FX           8/10/12/14 NOTE 88             E6         9p  58             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode 2 (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 88             E6         9p  58             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   BEAT LOOP 8/10/12/14 NOTE 96                    C7         9p  60             hh   Same as MIDI-IN  OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 96             C7         9p  60             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   BEAT LOOP 8/10/12/14 NOTE 104                   G#7        9p  68             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 104            G#7        9p  68             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   KEY SHIFT        8/10/12/14 NOTE 112            E8         9p  70             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                                     9/11/13/15 NOTE 112  E8         9p  70             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   KEY SHIFT        8/10/12/14 NOTE 120            C9         9p  78             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 120            C9         9p  78             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   HOT CUE          8/10/12/14 NOTE  1             C#-1       9p  01             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE  1             C#-1       9p  01             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   HOT CUE          8/10/12/14 NOTE  9             A-1        9p  09             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE  9             A-1        9p  09             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   PAD FX           8/10/12/14 NOTE 17             F0         9p  11             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode 1 (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 17             F0         9p  11             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   PAD FX           8/10/12/14 NOTE 25             C#1        9p  19             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode 1 (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 25             C#1        9p  19             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press      BEAT JUMP 8/10/12/14 NOTE      33            A1         9p  21             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                           mode (PAGE 1)                                                                                       MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+
+                           +SHIFT                           9/11/13/15 NOTE 33             A1         9p  21             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   BEAT JUMP 8/10/12/14 NOTE 41                    F2         9p  29             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 41             F2         9p  29             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   SAMPLER          8/10/12/14 NOTE 49             C#3        9p  31             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 49             C#3        9p  31             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   SAMPLER          8/10/12/14 NOTE 57             A3         9p  39             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+            P2    PAD 2    +SHIFT                                     9/11/13/15 NOTE 57   A3         9p  39             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   KEYBOARD 8/10/12/14 NOTE 65                     F4         9p  41             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                                     9/11/13/15 NOTE 65   F4         9p  41             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   KEYBOARD 8/10/12/14 NOTE 73                     C#5        9p  49             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 73             C#5        9p  49             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   PAD FX           8/10/12/14 NOTE  81            A5         9p  51             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode 2 (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 81             A5         9p  51             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   PAD FX           8/10/12/14 NOTE 89             F6         9p  59             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode 2 (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 89             F6         9p  59             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   BEAT LOOP 8/10/12/14 NOTE 97                    C#7        9p  61             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 97             C#7        9p  61             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   BEAT LOOP 8/10/12/14 NOTE 105                   A7         9p  69             hh   Same as MIDI-IN  OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                                     9/11/13/15 NOTE 105  A7         9p  69             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   KEY SHIFT        8/10/12/14 NOTE 113            F8         9p  71             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 113            F8         9p  71             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   KEY SHIFT        8/10/12/14 NOTE 121            C#9        9p  79             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                                     9/11/13/15 NOTE 121  C#9        9p  79             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                                                                   4
+                           User Interface                   MIDI assign reference 1                           MIDI-IN            MIDI-OUT
+                                                                                                          (to computer)      (from computer)
+
+     Group  Fig.                           Condition          MIDI   NOTE    MIDI Data (Data 1)    Status Data 1 Data 2 Status Data 1 Data 2                     Details (Data 2)
+                                                            Channel
+                  UI name  +SHIFT Trigger  (mode)                    / CC (Dec) (English (Hex) (Hex) (Hex) (Hex) (Hex) (Hex)
+                                                             (Dec)
+                                                                                           scale)
+
+PAD                                        HOT CUE          8/10/12/14 NOTE  2             D-1        9p  02             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   mode (PAGE 1)                                                                                       MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+
+                           +SHIFT                           9/11/13/15 NOTE  2             D-1        9p  02             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   HOT CUE          8/10/12/14 NOTE 10             A#-1       9p  0A             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                                     9/11/13/15 NOTE 10   A#-1       9p  0A             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   PAD FX           8/10/12/14 NOTE 18             F#0        9p  12             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode 1 (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 18             F#0        9p  12             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   PAD FX           8/10/12/14 NOTE 26             D1         9p  1A             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode 1 (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 26             D1         9p  1A             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press      BEAT JUMP 8/10/12/14 NOTE      34            A#1        9p  22             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                           mode (PAGE 1)                                                                                                          MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+
+                           +SHIFT                           9/11/13/15 NOTE 34             A#1        9p  22             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   BEAT JUMP 8/10/12/14 NOTE 42                    F#2        9p  2A             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 42             F#2        9p  2A             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   SAMPLER          8/10/12/14 NOTE 50             D3         9p  32             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 50             D3         9p  32             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   SAMPLER          8/10/12/14 NOTE 58             A#3        9p  3A             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+            P3    PAD 3    +SHIFT                                     9/11/13/15 NOTE 58   A#3        9p  3A             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   KEYBOARD 8/10/12/14 NOTE 66                     F#4        9p  42             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                                     9/11/13/15 NOTE 66   F#4        9p  42             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   KEYBOARD 8/10/12/14 NOTE 74                     D5         9p  4A             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 74             D5         9p  4A             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   PAD FX           8/10/12/14 NOTE  82            A#5        9p  52             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode 2 (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 82             A#5        9p  52             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   PAD FX           8/10/12/14 NOTE 90             F#6        9p  5A             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode 2 (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 90             F#6        9p  5A             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   BEAT LOOP 8/10/12/14 NOTE 98                    D7         9p  62             hh   Same as MIDI-IN  OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 98             D7         9p  62             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   BEAT LOOP 8/10/12/14 NOTE 106                   A#7        9p  6A             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 106            A#7        9p  6A             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   KEY SHIFT        8/10/12/14 NOTE 114            F#8        9p  72             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                                     9/11/13/15 NOTE 114  F#8        9p  72             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   KEY SHIFT        8/10/12/14 NOTE 122            D9         9p  7A             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 122            D9         9p  7A             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   HOT CUE          8/10/12/14 NOTE  3             D#-1       9p  03             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE  3             D#-1       9p  03             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   HOT CUE          8/10/12/14 NOTE  11            B-1        9p  0B             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 11             B-1        9p  0B             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   PAD FX           8/10/12/14 NOTE 19             G0         9p  13             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode 1 (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 19             G0         9p  13             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   PAD FX           8/10/12/14 NOTE 27             D#1        9p  1B             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode 1 (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 27             D#1        9p  1B             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press      BEAT JUMP 8/10/12/14 NOTE      35            B1         9p  23             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                           mode (PAGE 1)                                                                                       MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+
+                           +SHIFT                           9/11/13/15 NOTE 35             B1         9p  23             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   BEAT JUMP 8/10/12/14 NOTE 43                    G2         9p  2B             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 43             G2         9p  2B             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   SAMPLER          8/10/12/14 NOTE 51             D#3        9p  33             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 51             D#3        9p  33             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   SAMPLER          8/10/12/14 NOTE 59             B3         9p  3B             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+            P4    PAD 4    +SHIFT                                     9/11/13/15 NOTE 59   B3         9p  3B             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   KEYBOARD 8/10/12/14 NOTE 67                     G4         9p  43             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                                     9/11/13/15 NOTE 67   G4         9p  43             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   KEYBOARD 8/10/12/14 NOTE 75                     D#5        9p  4B             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 75             D#5        9p  4B             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   PAD FX           8/10/12/14 NOTE  83            B5         9p  53             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode 2 (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 83             B5         9p  53             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   PAD FX           8/10/12/14 NOTE 91             G6         9p  5B             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode 2 (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 91             G6         9p  5B             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   BEAT LOOP 8/10/12/14 NOTE 99                    D#7        9p  63             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 99             D#7        9p  63             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   BEAT LOOP 8/10/12/14 NOTE 107                   B7         9p  6B             hh   Same as MIDI-IN  OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                                     9/11/13/15 NOTE 107  B7         9p  6B             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   KEY SHIFT        8/10/12/14 NOTE 115            G8         9p  73             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 115            G8         9p  73             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   KEY SHIFT        8/10/12/14 NOTE 123            D#9        9p  7B             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                                     9/11/13/15 NOTE 123  D#9        9p  7B             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                                                                   5
+                           User Interface                   MIDI assign reference 1                           MIDI-IN            MIDI-OUT
+                                                                                                          (to computer)      (from computer)
+
+     Group  Fig.                           Condition          MIDI   NOTE    MIDI Data (Data 1)    Status Data 1 Data 2 Status Data 1 Data 2                     Details (Data 2)
+                                                            Channel
+                  UI name  +SHIFT Trigger  (mode)                    / CC (Dec) (English (Hex) (Hex) (Hex) (Hex) (Hex) (Hex)
+                                                             (Dec)
+                                                                                           scale)
+
+PAD                                        HOT CUE          8/10/12/14 NOTE  4             E-1        9p  04             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   mode (PAGE 1)                                                                                       MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+
+                           +SHIFT                           9/11/13/15 NOTE  4             E-1        9p  04             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   HOT CUE          8/10/12/14 NOTE  12            C0         9p  0C             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 12             C0         9p  0C             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   PAD FX           8/10/12/14 NOTE 20             G#0        9p  14             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode 1 (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 20             G#0        9p  14             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   PAD FX           8/10/12/14 NOTE 28             E1         9p  1C             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode 1 (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 28             E1         9p  1C             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press      BEAT JUMP 8/10/12/14 NOTE      36            C2         9p  24             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                           mode (PAGE 1)                                                                                                          MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+
+                           +SHIFT                           9/11/13/15 NOTE 36             C2         9p  24             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   BEAT JUMP 8/10/12/14 NOTE 44                    G#2        9p  2C             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 44             G#2        9p  2C             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   SAMPLER          8/10/12/14 NOTE 52             E3         9p  34             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 52             E3         9p  34             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   SAMPLER          8/10/12/14 NOTE 60             C4         9p  3C             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+            P5    PAD 5    +SHIFT                                     9/11/13/15 NOTE 60   C4         9p  3C             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   KEYBOARD 8/10/12/14 NOTE 68                     G#4        9p  44             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                                     9/11/13/15 NOTE 68   G#4        9p  44             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   KEYBOARD 8/10/12/14 NOTE 76                     E5         9p  4C             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 76             E5         9p  4C             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   PAD FX           8/10/12/14 NOTE  84            C6         9p  54             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode 2 (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 84             C6         9p  54             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   PAD FX           8/10/12/14 NOTE 92             G#6        9p  5C             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode 2 (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 92             G#6        9p  5C             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   BEAT LOOP 8/10/12/14 NOTE 100                   E7         9p  64             hh   Same as MIDI-IN  OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                                     9/11/13/15 NOTE 100  E7         9p  64             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   BEAT LOOP 8/10/12/14 NOTE 108                   C8         9p  6C             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 108            C8         9p  6C             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   KEY SHIFT        8/10/12/14 NOTE 116            G#8        9p  74             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                                     9/11/13/15 NOTE 116  G#8        9p  74             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   KEY SHIFT        8/10/12/14 NOTE 124            E9         9p  7C             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 124            E9         9p  7C             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   HOT CUE          8/10/12/14 NOTE  5             F-1        9p  05             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE  5             F-1        9p  05             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   HOT CUE          8/10/12/14 NOTE  13            C#0        9p  0D             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 13             C#0        9p  0D             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   PAD FX           8/10/12/14 NOTE 21             A0         9p  15             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode 1 (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 21             A0         9p  15             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   PAD FX           8/10/12/14 NOTE 29             F1         9p  1D             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode 1 (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 29             F1         9p  1D             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press      BEAT JUMP 8/10/12/14 NOTE      37            C#2        9p  25             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                           mode (PAGE 1)                                                                                       MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+
+                           +SHIFT                           9/11/13/15 NOTE 37             C#2        9p  25             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   BEAT JUMP 8/10/12/14 NOTE 45                    A2         9p  2D             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 45             A2         9p  2D             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   SAMPLER          8/10/12/14 NOTE 53             F3         9p  35             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 53             F3         9p  35             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   SAMPLER          8/10/12/14 NOTE 61             C#4        9p  3D             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+            P6    PAD 6    +SHIFT                                     9/11/13/15 NOTE 61   C#4        9p  3D             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   KEYBOARD 8/10/12/14 NOTE 69                     A4         9p  45             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                                     9/11/13/15 NOTE 69   A4         9p  45             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   KEYBOARD 8/10/12/14 NOTE 77                     F5         9p  4D             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 77             F5         9p  4D             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   PAD FX           8/10/12/14 NOTE  85            C#6        9p  55             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode 2 (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 85             C#6        9p  55             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   PAD FX           8/10/12/14 NOTE 93             A6         9p  5D             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode 2 (PAGE 2)
+                           +SHIFT                           9/11/13/15 NOTE 93             A6         9p  5D             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   BEAT LOOP 8/10/12/14 NOTE 101                   F7         9p  65             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 101            F7         9p  65             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   BEAT LOOP 8/10/12/14 NOTE 109                   C#8        9p  6D             hh   Same as MIDI-IN  OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                                     9/11/13/15 NOTE 109  C#8        9p  6D             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   KEY SHIFT        8/10/12/14 NOTE 117            A8         9p  75             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 1)
+                           +SHIFT                           9/11/13/15 NOTE 117            A8         9p  75             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                   press   KEY SHIFT        8/10/12/14 NOTE 125            F9         9p  7D             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                               MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                           mode (PAGE 2)
+                           +SHIFT                                     9/11/13/15 NOTE 125  F9         9p  7D             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                                                                   6
+                              User Interface                   MIDI assign reference 1                           MIDI-IN            MIDI-OUT
+                                                                                                             (to computer)      (from computer)
+
+      Group  Fig.                             Condition          MIDI   NOTE    MIDI Data (Data 1)    Status Data 1 Data 2 Status Data 1 Data 2                     Details (Data 2)
+PAD                                                            Channel
+                   UI name    +SHIFT Trigger  (mode)                    / CC (Dec) (English (Hex) (Hex) (Hex) (Hex) (Hex) (Hex)
+                                                                (Dec)
+                                                                                              scale)
+
+                                      press   HOT CUE          8/10/12/14 NOTE  6             F#-1       9p  06             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode (PAGE 1)
+                              +SHIFT                           9/11/13/15 NOTE  6             F#-1       9p  06             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   HOT CUE          8/10/12/14 NOTE  14            D0         9p  0E             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode (PAGE 2)
+                              +SHIFT                           9/11/13/15 NOTE 14             D0         9p  0E             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   PAD FX           8/10/12/14 NOTE 22             A#0        9p  16             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                     MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode 1 (PAGE 1)
+                              +SHIFT                           9/11/13/15 NOTE 22             A#0        9p  16             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   PAD FX           8/10/12/14 NOTE 30             F#1        9p  1E             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode 1 (PAGE 2)
+                              +SHIFT                           9/11/13/15 NOTE 30             F#1        9p  1E             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press      BEAT JUMP 8/10/12/14 NOTE      38            D2         9p  26             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                              mode (PAGE 1)                                                                                                          MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+
+                              +SHIFT                           9/11/13/15 NOTE 38             D2         9p  26             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   BEAT JUMP 8/10/12/14 NOTE 46                    A#2        9p  2E             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode (PAGE 2)
+                              +SHIFT                           9/11/13/15 NOTE 46             A#2        9p  2E             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   SAMPLER          8/10/12/14 NOTE 54             F#3        9p  36             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                     MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode (PAGE 1)
+                              +SHIFT                           9/11/13/15 NOTE 54             F#3        9p  36             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   SAMPLER          8/10/12/14 NOTE 62             D4         9p  3E             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode (PAGE 2)
+             P7    PAD 7      +SHIFT                                     9/11/13/15 NOTE 62   D4         9p  3E             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   KEYBOARD 8/10/12/14 NOTE 70                     A#4        9p  46             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                     MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode (PAGE 1)
+                              +SHIFT                                     9/11/13/15 NOTE 70   A#4        9p  46             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   KEYBOARD 8/10/12/14 NOTE 78                     F#5        9p  4E             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode (PAGE 2)
+                              +SHIFT                           9/11/13/15 NOTE 78             F#5        9p  4E             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   PAD FX           8/10/12/14 NOTE  86            D6         9p  56             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                     MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode 2 (PAGE 1)
+                              +SHIFT                           9/11/13/15 NOTE 86             D6         9p  56             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   PAD FX           8/10/12/14 NOTE 94             A#6        9p  5E             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode 2 (PAGE 2)
+                              +SHIFT                           9/11/13/15 NOTE 94             A#6        9p  5E             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   BEAT LOOP 8/10/12/14 NOTE 102                   F#7        9p  66             hh   Same as MIDI-IN  OFF=0x00, ON=0x7F
+                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode (PAGE 1)
+                              +SHIFT                                     9/11/13/15 NOTE 102  F#7        9p  66             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   BEAT LOOP 8/10/12/14 NOTE 110                   D8         9p  6E             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode (PAGE 2)
+                              +SHIFT                           9/11/13/15 NOTE 110            D8         9p  6E             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   KEY SHIFT        8/10/12/14 NOTE 118            A#8        9p  76             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode (PAGE 1)
+                              +SHIFT                                     9/11/13/15 NOTE 118  A#8        9p  76             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   KEY SHIFT        8/10/12/14 NOTE 126            F#9        9p  7E             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode (PAGE 2)
+                              +SHIFT                           9/11/13/15 NOTE 126            F#9        9p  7E             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   HOT CUE          8/10/12/14 NOTE  7             G-1        9p  07             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode (PAGE 1)
+                              +SHIFT                           9/11/13/15 NOTE  7             G-1        9p  07             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   HOT CUE          8/10/12/14 NOTE  15            D#0        9p  0F             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode (PAGE 2)
+                              +SHIFT                           9/11/13/15 NOTE 15             D#0        9p  0F             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   PAD FX           8/10/12/14 NOTE 23             B0         9p  17             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode 1 (PAGE 1)
+                              +SHIFT                           9/11/13/15 NOTE 23             B0         9p  17             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   PAD FX           8/10/12/14 NOTE 31             G1         9p  1F             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                     MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode 1 (PAGE 2)
+                              +SHIFT                           9/11/13/15 NOTE 31             G1         9p  1F             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press      BEAT JUMP 8/10/12/14 NOTE      39            D#2        9p  27             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                              mode (PAGE 1)                                                                                       MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+
+                              +SHIFT                           9/11/13/15 NOTE 39             D#2        9p  27             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   BEAT JUMP 8/10/12/14 NOTE 47                    B2         9p  2F             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                     MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode (PAGE 2)
+                              +SHIFT                           9/11/13/15 NOTE 47             B2         9p  2F             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   SAMPLER          8/10/12/14 NOTE 55             G3         9p  37             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode (PAGE 1)
+                              +SHIFT                           9/11/13/15 NOTE 55             G3         9p  37             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   SAMPLER          8/10/12/14 NOTE 63             D#4        9p  3F             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                     MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode (PAGE 2)
+             P8    PAD 8      +SHIFT                                     9/11/13/15 NOTE 63   D#4        9p  3F             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   KEYBOARD 8/10/12/14 NOTE 71                     B4         9p  47             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode (PAGE 1)
+                              +SHIFT                                     9/11/13/15 NOTE 71   B4         9p  47             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   KEYBOARD 8/10/12/14 NOTE 79                     G5         9p  4F             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                     MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode (PAGE 2)
+                              +SHIFT                           9/11/13/15 NOTE 79             G5         9p  4F             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   PAD FX           8/10/12/14 NOTE  87            D#6        9p  57             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode 2 (PAGE 1)
+                              +SHIFT                           9/11/13/15 NOTE 87             D#6        9p  57             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   PAD FX           8/10/12/14 NOTE 95             B6         9p  5F             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                                     MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode 2 (PAGE 2)
+                              +SHIFT                           9/11/13/15 NOTE 95             B6         9p  5F             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   BEAT LOOP 8/10/12/14 NOTE 103                   G7         9p  67             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode (PAGE 1)
+                              +SHIFT                           9/11/13/15 NOTE 103            G7         9p  67             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   BEAT LOOP 8/10/12/14 NOTE 111                   D#8        9p  6F             hh   Same as MIDI-IN  OFF=0x00, ON=0x7F
+                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode (PAGE 2)
+                              +SHIFT                                     9/11/13/15 NOTE 111  D#8        9p  6F             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   KEY SHIFT        8/10/12/14 NOTE 119            B8         9p  77             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode (PAGE 1)
+                              +SHIFT                           9/11/13/15 NOTE 119            B8         9p  77             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                      press   KEY SHIFT        8/10/12/14 NOTE 127            G9         9p  7F             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                                                                                                                                  MIDI-OUT: lit in color specified in color number(1-127). OFF=0x00(dimmer)
+                                              mode (PAGE 2)
+                              +SHIFT                                     9/11/13/15 NOTE 127  G9         9p  7F             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+             P9    HOT CUE            press                    1/2/3/4 NOTE 27                D#1        9n  1B             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                              +SHIFT                           1/2/3/4 NOTE 105               A7         9n  69             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+             P10   PAD FX             press                    1/2/3/4 NOTE 30                F#1        9n  1E             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                              +SHIFT                           1/2/3/4 NOTE 107               B7         9n  6B             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+             P11   BEAT JUMP          press                    1/2/3/4 NOTE 32                G#1        9n  20             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                              +SHIFT                           1/2/3/4 NOTE 109               C#8        9n  6D             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+             P12   SAMPER             press                    1/2/3/4 NOTE 34                A#1        9n  22             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                              +SHIFT                           1/2/3/4 NOTE 111               D#8        9n  6F             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                                                                      7
+                                          User Interface                   MIDI assign reference 1                               MIDI-IN            MIDI-OUT
+                                                                                                                             (to computer)      (from computer)
+
+     Group  Fig.                                                Condition    MIDI   NOTE    MIDI Data (Data 1)        Status Data 1 Data 2 Status Data 1 Data 2                         Details (Data 2)
+                                                                           Channel
+                      UI name             +SHIFT Trigger        (mode)              / CC (Dec) (English (Hex) (Hex) (Hex) (Hex) (Hex) (Hex)
+                                                                            (Dec)
+                                                                                                              scale)
+
+PAD                                                     press   HOT CUE    1/2/3/4 NOTE 36                    C2         9n  24             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                          +SHIFT                  mode
+                                                                           1/2/3/4 NOTE     1                 C#-1       9n  01             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                        press   PAD FX     1/2/3/4 NOTE 37                    C#2        9n  25             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                          +SHIFT                mode 1
+                                                                           1/2/3/4 NOTE     2                 D-1        9n  02             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                        press   BEAT JUMP  1/2/3/4 NOTE 38                    D2         9n  26             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                          +SHIFT                    mode
+                                                                           1/2/3/4 NOTE     3                 D#-1       9n  03             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                        press   SAMPLER    1/2/3/4 NOTE 39                    D#2        9n  27             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                          +SHIFT                  mode
+            P13       PAGE                                                 1/2/3/4 NOTE     4                 E-1        9n  04             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                      (*1)                              press   KEYBOARD   1/2/3/4 NOTE 40                    E2         9n  28             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                          +SHIFT                    mode
+                                                                           1/2/3/4 NOTE     5                 F-1        9n  05             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                        press   PAD FX     1/2/3/4 NOTE 41                    F2         9n  29             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                          +SHIFT                mode 2
+                                                                           1/2/3/4 NOTE     6                 F#-1       9n  06             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                        press   BEAT LOOP  1/2/3/4 NOTE 42                    F#2        9n  2A             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                          +SHIFT                    mode
+                                                                           1/2/3/4 NOTE     7                 G-1        9n  07             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                        press   KEY SHIFT  1/2/3/4 NOTE 43                    G2         9n  2B             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                          +SHIFT                   mode
+                                                                           1/2/3/4 NOTE     8                 G#-1       9n  08             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                        press   HOT CUE    1/2/3/4 NOTE 44                    G#2        9n  2C             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                          +SHIFT                  mode
+                                                                           1/2/3/4 NOTE     9                 A-1        9n  09             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                        press   PAD FX     1/2/3/4 NOTE 45                    A2         9n  2D             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                          +SHIFT                mode 1
+                                                                           1/2/3/4 NOTE 122                   D9         9n  7A             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                        press   BEAT JUMP  1/2/3/4 NOTE 46                    A#2        9n  2E             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                          +SHIFT                    mode
+                                                                           1/2/3/4 NOTE 123                   D#9        9n  7B             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                        press   SAMPLER    1/2/3/4 NOTE 47                    B2         9n  2F             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                          +SHIFT                  mode
+            P14       PAGE                                                 1/2/3/4 NOTE 124                   E9         9n  7C             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                      (*1)                        press         KEYBOARD   1/2/3/4 NOTE 48                    C3         9n  30             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                          +SHIFT                mode       1/2/3/4 NOTE 125                   F9         9n  7D             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                        press   PAD FX     1/2/3/4 NOTE 49                    C#3        9n  31             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                          +SHIFT                mode 2
+                                                                           1/2/3/4 NOTE 126                   F#9        9n  7E             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                        press   BEAT LOOP  1/2/3/4 NOTE 50                    D3         9n  32             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                          +SHIFT                    mode   1/2/3/4 NOTE 127                   G9
+                                                                                                                         9n  7F             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+                                                        press   KEY SHIFT  1/2/3/4 NOTE 51                    D#3        9n  33             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+                                          +SHIFT                   mode
+                                                                           1/2/3/4 NOTE     0                 C-1        9n  00             hh   Same as MIDI-IN OFF=0x00, ON=0x7F
+
+MIDI-OUT
+
+                                                                           MIDI assign reference 1                               MIDI-IN                 MIDI-OUT
+                                                                                                                             (to computer)          (from computer)
+                      Communication
+     Group                   name                 Function                   MIDI   NOTE    MIDI Data (Data 1)        Status Data 1 Data 2      Status Data 1 Data 2                    Details (Data 2)
+                                                                           Channel                                                              (Hex) (Hex) (Hex)
+                                                                                    / CC    (Dec)             (English (Hex) (Hex) (Hex)
+                                                                            (Dec)                              scale)
+
+Illumination Control  Current position                                     1/2/3/4 CC       20                                                  Bn  14 MSB Min (MSB0x00, LSB0x00)  Max (MSB0x02, LSB0x67)
+                      bar                                                                   52
+                                                                                                                                                    34  LSB 0  359 [degree]
+                      BPM value
+                                                                           1/2/3/4 CC       21                                                  Bn  15 MSB Min (MSB0x00, LSB0x00)  Max (MSB0x4E, LSB0x0F)
+
+                                                                                            53                                                      35  LSB BPM0.0  999.9
+
+                      Playing speed                                        1/2/3/4 CC       22                                                  Bn  16 MSB Min (MSB0x00, LSB0x00)  Max (MSB0x4E, LSB0x0F)
+                      Current time
+                      (minute)                                                              54                                                      36  LSB Playing speed100.0%  100.0%
+                      Current time
+                      (second)                                             1/2/3/4 NOTE 66                    F#4                               9n  42  hh 0x00  0x63 (099)
+                      Time mode
+                                                                           1/2/3/4 NOTE 67                     G4                               9n  43  hh 0x00  0x3B (059)
+                      Cue marker
+                                                                           1/2/3/4 NOTE 68                    G#4                               9n  44  hh ElapsedOFF=0x00
+                                                                                                                                                                      RemainingON=0x7F
+                                                                                                          23   
+                                          for JOG display (*2)             1/2/3/4 CC                                                               17  MSB Min (MSB0x00, LSB0x00)  Max (MSB0x02, LSB0x67)
+                                                                                                              C#5
+                                                                                                          55   D5                               Bn  37  LSB 0  359 [degree]
+                                                                           1/2/3/4 NOTE 73                     F6
+                                                                           1/2/3/4 NOTE 74                    F#6                                                     Hide Cue marker(MSB:0x7F, LSB:0x7F)
+                                                                           1/2/3/4 NOTE 89                     G6
+                      Key value                                            1/2/3/4 NOTE 90                                                      9n  49  hh 0x000x18 (*3)
+                      Key variation                                        1/2/3/4 NOTE 91
+                      Beat Sync Master                                                                                                          9n  4A  hh 0x01-0x0C (-12  -1), 0x0D(0), 0x0E0x19 (+1  +12
+                      Beat Sync State
+                      JOG Ring LED State                                                                                                        9n  59  hh OFF=0x00, ON=0x7F
+
+                      Display/hide                                                                                                              9n  5A  hh OFF=0x00, ON=0x7F
+                      information on
+                      the jog dial                                                                                                              9n  5B  hh OFF=0x00, WHITE=0x01
+                      display
+                                                                           1/2/3/4 NOTE 93                    A6                                9n  5D  hh Display information=0x00, Hide information=0x7F
+                                                                                                                                                                      (To hide information, send 0x7F.)
+
+*1 Press the [PAGE ] button in each pad mode to switch to PAGE 1. Press the [PAGE ] button in each pad mode to switch to PAGE 2.
+     When switching the PAGE, MIDI for the pad changes.
+
+    When switching the PAGE in [Hot Cue] mode on DECK1
+
+PAGE 1                                                          PAGE                PAGE 2
+
+     97 00 hh 97 01 hh 97 02 hh 97 03 hh                                            97 08 hh 97 09 hh 97 0A hh 97 0B hh
+
+     97 04 hh 97 05 hh 97 06 hh 97 07 hh                        PAGE                97 0C hh 97 0D hh 97 0E hh 97 0F hh
+
+*2 You can select information on the jog dial display section.
+*3 Displayed KEY information data are as follows.
+
+                                                                                                                      8
+
