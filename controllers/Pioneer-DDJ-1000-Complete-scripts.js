@@ -18,6 +18,12 @@
 //     loop is running (note 0x04+deck on MIDI channel 16).
 //   * Pad LEDs take a colour number: a hue wheel from 1 (blue) through green,
 //     yellow, orange, red and pink to 61 (purple); 127 is near-white, 0 dims.
+//   * Every pad mode has its own pad notes and the unit shows a mode's colours
+//     by itself when it switches, so all modes are kept up to date.
+//
+// Mixxx settings changed on the mapping's own account (headphone mix, tempo
+// range, cue mode, Beat FX routing, Quick Effect switches) go through
+// DDJ1000.override() and are put back in shutdown(), unless changed again.
 
 var DDJ1000 = {};
 
@@ -292,15 +298,18 @@ DDJ1000.DISPLAY = {
 
 DDJ1000.decks = [1, 2, 3, 4];
 DDJ1000.deck = {};
-DDJ1000.connections = [];
+DDJ1000.connections = [];  // show Mixxx's state; resendAll() replays them
+DDJ1000.listeners = [];    // react to a change (track load, pad colour); never replayed
 DDJ1000.timer = 0;
 DDJ1000.opened = false;
 DDJ1000.blink = false;
 DDJ1000.blinkAt = 0;
-DDJ1000.fullRenderAt = 0;
-DDJ1000.fullRenderDeck = 0;
+DDJ1000.padQueue = [];     // [deck, mode] still to draw after resendAll(), one per tick
+DDJ1000.padBlinks = false; // set while a pad colour is worked out if it blinks
 DDJ1000.sent = {};          // "status:data1" -> last data2, so unchanged LEDs are not resent
-DDJ1000.hiRes = {};         // 14-bit MSB/LSB halves, keyed by "status:msb"
+DDJ1000.hiRes = {};         // 14-bit MSB halves, keyed by "status:msb"
+DDJ1000.overrides = {};     // "group,key" -> {group, key, original, value}
+DDJ1000.samplersConnected = 0;
 DDJ1000.paletteBase = 1;
 
 DDJ1000.beatFx = {
@@ -329,6 +338,7 @@ DDJ1000.newDeckState = function () {
         samplerBank: 0,
         keyboardHotcue: 1,
         pressed: {},            // mode -> {pad: true}
+        blinking: {},           // pad note -> [mode, page, pad] for pads whose colour blinks
         loopAdjust: null,       // "in" / "out" while the jog moves a loop point
         search: null,
         searchLong: false,
@@ -336,7 +346,7 @@ DDJ1000.newDeckState = function () {
         reverseTimer: 0,
         gridMode: null,         // "adjust" / "slide" while rekordbox-style grid edit is on
         padFxHeld: null,        // entry currently held in a pad FX mode
-        slipBeforePadFx: 0,
+        trickRestore: null,     // play/slip from before a pad FX brake or backspin
         lastLoadPress: 0,
         loadFlashTimer: 0,
     };
@@ -400,18 +410,19 @@ DDJ1000.send14 = function (status, msb, value) {
     }
 };
 
-// Combine a 14-bit knob from its MSB (sent first) and LSB. Returns 0..1.
+// Combine a 14-bit knob from its MSB (sent first) and LSB. Returns 0..1 when the
+// LSB completes the pair, undefined for the MSB: combined with the old LSB it
+// would make the value jump until the new LSB arrives.
 DDJ1000.take14 = function (status, control, value) {
     var isLsb = control >= 0x20 && control < 0x40;
     var msb = isLsb ? control - 0x20 : control;
     var key = status + ":" + msb;
-    var entry = DDJ1000.hiRes[key] || (DDJ1000.hiRes[key] = { msb: 0, lsb: 0 });
-    if (isLsb) {
-        entry.lsb = value;
-    } else {
+    var entry = DDJ1000.hiRes[key] || (DDJ1000.hiRes[key] = { msb: 0 });
+    if (!isLsb) {
         entry.msb = value;
+        return undefined;
     }
-    return ((entry.msb << 7) | entry.lsb) / 16383;
+    return ((entry.msb << 7) | value) / 16383;
 };
 
 // Pioneer relative encoders count away from 0x40 (jog) or from 0 (browse).
@@ -429,6 +440,35 @@ DDJ1000.connect = function (group, key, callback) {
         DDJ1000.connections.push(connection);
     }
     return connection;
+};
+
+DDJ1000.listen = function (group, key, callback) {
+    var connection = engine.makeConnection(group, key, callback);
+    if (connection) {
+        DDJ1000.listeners.push(connection);
+    }
+    return connection;
+};
+
+// Change a Mixxx control on the mapping's own account, remembering how it was.
+// restoreOverrides() puts it back unless it was changed again meanwhile.
+DDJ1000.override = function (group, key, value) {
+    var id = group + "," + key;
+    if (!(id in DDJ1000.overrides)) {
+        DDJ1000.overrides[id] = { group: group, key: key, original: engine.getValue(group, key) };
+    }
+    DDJ1000.overrides[id].value = value;
+    engine.setValue(group, key, value);
+};
+
+DDJ1000.restoreOverrides = function () {
+    Object.keys(DDJ1000.overrides).forEach(function (id) {
+        var changed = DDJ1000.overrides[id];
+        if (engine.getValue(changed.group, changed.key) === changed.value) {
+            engine.setValue(changed.group, changed.key, changed.original);
+        }
+    });
+    DDJ1000.overrides = {};
 };
 
 DDJ1000.toggle = function (group, key) {
@@ -455,6 +495,36 @@ DDJ1000.numSamplers = function () {
     return engine.getValue("[App]", "num_samplers") || 16;
 };
 
+DDJ1000.numberedGroups = function (count, name) {
+    var groups = [];
+    for (var i = 1; i <= count; i++) {
+        groups.push(name(i));
+    }
+    return groups;
+};
+
+DDJ1000.samplerGroups = function () {
+    return DDJ1000.numberedGroups(DDJ1000.numSamplers(), function (i) { return "[Sampler" + i + "]"; });
+};
+
+DDJ1000.microphoneGroups = function () {
+    return DDJ1000.numberedGroups(engine.getValue("[App]", "num_microphones"), function (i) {
+        return i === 1 ? "[Microphone]" : "[Microphone" + i + "]";
+    });
+};
+
+// Every group an effect unit can be routed to.
+DDJ1000.routingGroups = function () {
+    return DDJ1000.decks.map(DDJ1000.group)
+        .concat(["[Master]", "[Headphone]"])
+        .concat(DDJ1000.samplerGroups())
+        .concat(DDJ1000.microphoneGroups())
+        .concat(DDJ1000.numberedGroups(engine.getValue("[App]", "num_auxiliaries"),
+            function (i) { return "[Auxiliary" + i + "]"; }))
+        .concat(DDJ1000.numberedGroups(engine.getValue("[App]", "num_preview_decks"),
+            function (i) { return "[PreviewDeck" + i + "]"; }));
+};
+
 // ---------------------------------------------------------------------------
 // Lifecycle
 // ---------------------------------------------------------------------------
@@ -464,8 +534,8 @@ DDJ1000.init = function () {
         var group = DDJ1000.group(deck);
         DDJ1000.deck[deck] = DDJ1000.newDeckState();
 
-        engine.setValue(group, "rateRange", DDJ1000.settings.defaultTempoRange);
-        engine.setValue(group, "cue_mode", 1); // Pioneer: CUE behaves like a CDJ
+        DDJ1000.override(group, "rateRange", DDJ1000.settings.defaultTempoRange);
+        DDJ1000.override(group, "cue_mode", 1); // Pioneer: CUE behaves like a CDJ
         // No soft takeover: the tempo fader is a plain pot on this unit, just
         // like on rekordbox, so its physical position is always the value —
         // moving it jumps the tempo straight to where the fader sits.
@@ -476,7 +546,7 @@ DDJ1000.init = function () {
 
     // The unit blends cue and master itself (HEADPHONES MIX is analogue), so
     // the headphone output carries the cue mix only.
-    engine.setValue("[Master]", "headMix", -1);
+    DDJ1000.override("[Master]", "headMix", -1);
 
     DDJ1000.connectMixerLeds();
     DDJ1000.setupBeatFx();
@@ -490,10 +560,20 @@ DDJ1000.shutdown = function () {
         engine.stopTimer(DDJ1000.timer);
         DDJ1000.timer = 0;
     }
-    DDJ1000.connections.forEach(function (connection) {
+    DDJ1000.decks.forEach(function (deck) {
+        var state = DDJ1000.deck[deck];
+        [state.loadFlashTimer, state.reverseTimer].forEach(function (id) {
+            if (id) {
+                engine.stopTimer(id);
+            }
+        });
+    });
+    DDJ1000.connections.concat(DDJ1000.listeners).forEach(function (connection) {
         connection.disconnect();
     });
     DDJ1000.connections = [];
+    DDJ1000.listeners = [];
+    DDJ1000.restoreOverrides();
 
     if (!DDJ1000.opened) {
         return;
@@ -532,6 +612,8 @@ DDJ1000.sendOpeningState = function () {
 };
 
 // Forget the LED cache and send everything again (also used after a deck switch).
+// Only redraws: the track load reaction (KEY SYNC reset, ring animation) is a
+// listener and is not replayed.
 DDJ1000.resendAll = function () {
     DDJ1000.sent = {};
     DDJ1000.connections.forEach(function (connection) {
@@ -542,10 +624,11 @@ DDJ1000.resendAll = function () {
         DDJ1000.updateVinylLed(deck);
         DDJ1000.updateLoopAdjustLeds(deck);
         DDJ1000.deckLed(deck, 0x65, DDJ1000.deck[deck].keySync);
-        DDJ1000.renderPads(deck, false);
+        DDJ1000.updateClock(deck);
     });
     DDJ1000.updateBeatFxLeds();
     DDJ1000.updateColorFxLeds();
+    DDJ1000.queueAllPads();
 };
 
 DDJ1000.tick = function () {
@@ -557,21 +640,16 @@ DDJ1000.tick = function () {
         DDJ1000.blink = !DDJ1000.blink;
         DDJ1000.blinkAt = now;
         DDJ1000.decks.forEach(DDJ1000.updateLoopAdjustLeds);
-        DDJ1000.decks.forEach(DDJ1000.updateModeLeds);
+        DDJ1000.decks.forEach(DDJ1000.renderBlinkingPads);
     }
-    // The pads of the other modes are refreshed one deck at a time, so the
-    // unit never gets a flood of pad messages at once.
-    var fullDeck = 0;
-    if (now - DDJ1000.fullRenderAt >= 250) {
-        DDJ1000.fullRenderAt = now;
-        DDJ1000.fullRenderDeck = DDJ1000.fullRenderDeck % 4 + 1;
-        fullDeck = DDJ1000.fullRenderDeck;
+    var queued = DDJ1000.padQueue.shift();
+    if (queued) {
+        DDJ1000.renderMode(queued[0], queued[1]);
     }
     DDJ1000.decks.forEach(function (deck) {
         DDJ1000.checkThrow(deck);
         DDJ1000.updateSearch(deck);
-        DDJ1000.updateDisplay(deck);
-        DDJ1000.renderPads(deck, deck === fullDeck);
+        DDJ1000.updateClock(deck);
     });
 };
 
@@ -613,14 +691,48 @@ DDJ1000.connectDeckLeds = function (deck) {
     DDJ1000.connect(group, "reverseroll", function (value) {
         DDJ1000.led(status, 0x15, value > 0);
     });
-    DDJ1000.connect(group, "track_loaded", function (value) {
-        DDJ1000.onTrackLoaded(deck, value > 0);
-    });
     DDJ1000.connect(group, "playposition", function (value) {
         DDJ1000.deck[deck].position = { value: value, at: Date.now() };
     });
     DDJ1000.connect(group, "vu_meter", function (value) {
         DDJ1000.send(0xB0 + deck - 1, 0x02, Math.round(value * 127));
+    });
+    ["track_loaded", "track_samplerate", "cue_point", "bpm", "rate_ratio", "rate", "rateRange",
+        "key", "pitch", "sync_mode", "sync_enabled"].forEach(function (key) {
+        DDJ1000.connect(group, key, function () {
+            DDJ1000.updateDisplayInfo(deck);
+        });
+    });
+    // Mixxx sets track_loaded on every load, also when one track replaces
+    // another. A listener, so a redraw does not count as a load.
+    DDJ1000.listen(group, "track_loaded", function (value) {
+        DDJ1000.onTrackLoaded(deck, value > 0);
+    });
+    DDJ1000.connectPads(deck);
+};
+
+// Pad colours are redrawn when the Mixxx controls they show change.
+DDJ1000.connectPads = function (deck) {
+    var group = DDJ1000.group(deck);
+    var M = DDJ1000.MODE;
+    var hotCuePad = function (number) {
+        return function () {
+            DDJ1000.renderPad(deck, M.HOT_CUE, number > 8 ? 2 : 1, (number - 1) % 8);
+        };
+    };
+    for (var number = 1; number <= 16; number++) {
+        ["status", "color", "type"].forEach(function (property) {
+            DDJ1000.listen(group, "hotcue_" + number + "_" + property, hotCuePad(number));
+        });
+    }
+    DDJ1000.listen(group, "pitch_adjust", function () {
+        DDJ1000.renderMode(deck, M.KEYBOARD);
+        DDJ1000.renderMode(deck, M.KEY_SHIFT);
+    });
+    ["loop_enabled", "beatloop_size"].forEach(function (key) {
+        DDJ1000.listen(group, key, function () {
+            DDJ1000.renderMode(deck, M.BEAT_LOOP);
+        });
     });
 };
 
@@ -633,10 +745,32 @@ DDJ1000.connectMixerLeds = function () {
     DDJ1000.connect("[EffectRack1_EffectUnit1]", "enabled", function (value) {
         DDJ1000.led(0x94, 0x47, value > 0 || DDJ1000.beatFx.rolling.length > 0);
     });
-    // SAMPLER CUE lights while any sampler is cued.
-    for (var i = 1; i <= DDJ1000.numSamplers(); i++) {
-        DDJ1000.connect("[Sampler" + i + "]", "pfl", DDJ1000.updateSamplerCueLed);
+    // Samplers can be added later (bank paging, the skin); connect those too.
+    DDJ1000.listen("[App]", "num_samplers", DDJ1000.connectSamplers);
+    DDJ1000.connectSamplers();
+};
+
+// Connect the samplers added since the last call: SAMPLER CUE light and pads.
+DDJ1000.connectSamplers = function () {
+    var count = DDJ1000.numSamplers();
+    if (count <= DDJ1000.samplersConnected) {
+        return;
     }
+    var samplerPad = function (number) {
+        return function () {
+            DDJ1000.renderSamplerPad(number);
+        };
+    };
+    for (var i = DDJ1000.samplersConnected + 1; i <= count; i++) {
+        var group = "[Sampler" + i + "]";
+        DDJ1000.connect(group, "pfl", DDJ1000.updateSamplerCueLed);
+        DDJ1000.listen(group, "track_loaded", samplerPad(i));
+        DDJ1000.listen(group, "play", samplerPad(i));
+    }
+    DDJ1000.samplersConnected = count;
+    DDJ1000.decks.forEach(function (deck) {
+        DDJ1000.renderMode(deck, DDJ1000.MODE.SAMPLER);
+    });
 };
 
 DDJ1000.updateSamplerCueLed = function () {
@@ -702,7 +836,8 @@ DDJ1000.estimateElapsed = function (deck, group, duration) {
     return DDJ1000.clamp(DDJ1000.clamp(sample.value, 0, 1) * duration + seconds * speed, 0, duration);
 };
 
-DDJ1000.updateDisplay = function (deck) {
+// Display values that change only with the track, the tempo or a button.
+DDJ1000.updateDisplayInfo = function (deck) {
     var group = DDJ1000.group(deck);
     var status = 0x90 + deck - 1;
     var cc = 0xB0 + deck - 1;
@@ -712,31 +847,12 @@ DDJ1000.updateDisplay = function (deck) {
     DDJ1000.send(status, D.syncState, engine.getValue(group, "sync_enabled") ? 0x7F : 0x00);
 
     if (!engine.getValue(group, "track_loaded")) {
-        DDJ1000.send(status, D.timeMinute, 0);
-        DDJ1000.send(status, D.timeSecond, 0);
         DDJ1000.send14(cc, D.bpmMsb, 0);
         DDJ1000.send14(cc, D.cueMarkerMsb, 0x3FFF);
         DDJ1000.send(status, D.keyValue, 0);
         DDJ1000.send(status, D.keyVariation, 0x0D);
-        DDJ1000.send(status, D.ringLed, 0x01);
         return;
     }
-
-    var duration = engine.getValue(group, "duration");
-    var elapsed = DDJ1000.estimateElapsed(deck, group, duration);
-    var remainingMode = engine.getValue("[Controls]", "ShowDurationRemaining") !== 0;
-    var shown = remainingMode ? Math.max(0, duration - elapsed) : elapsed;
-    DDJ1000.send(status, D.timeMode, remainingMode ? 0x7F : 0x00);
-    DDJ1000.send(status, D.timeMinute, Math.min(99, Math.floor(shown / 60)));
-    DDJ1000.send(status, D.timeSecond, Math.floor(shown % 60));
-
-    // The position bar spins like a record at 33 1/3, not as track progress.
-    var turns = elapsed / DDJ1000.secondsPerRevolution();
-    DDJ1000.send14(cc, D.positionBarMsb, Math.floor((turns - Math.floor(turns)) * 360) % 360);
-
-    // Like a CDJ/rekordbox, the jog display flashes once only a little track is left.
-    var nearEnd = duration - elapsed <= DDJ1000.settings.endOfTrackWarningSec;
-    DDJ1000.send(status, D.ringLed, nearEnd && !DDJ1000.blink ? 0x00 : 0x01);
 
     var cuePoint = engine.getValue(group, "cue_point");
     if (cuePoint >= 0) {
@@ -758,6 +874,36 @@ DDJ1000.updateDisplay = function (deck) {
     DDJ1000.send(status, D.keyValue, DDJ1000.keyCode(engine.getValue(group, "key")));
     var shift = Math.round(engine.getValue(group, "pitch"));
     DDJ1000.send(status, D.keyVariation, 0x0D + DDJ1000.clamp(shift, -12, 12));
+};
+
+// From the timer: time, position bar and the end-of-track flash.
+DDJ1000.updateClock = function (deck) {
+    var group = DDJ1000.group(deck);
+    var status = 0x90 + deck - 1;
+    var D = DDJ1000.DISPLAY;
+
+    if (!engine.getValue(group, "track_loaded")) {
+        DDJ1000.send(status, D.timeMinute, 0);
+        DDJ1000.send(status, D.timeSecond, 0);
+        DDJ1000.send(status, D.ringLed, 0x01);
+        return;
+    }
+
+    var duration = engine.getValue(group, "duration");
+    var elapsed = DDJ1000.estimateElapsed(deck, group, duration);
+    var remainingMode = engine.getValue("[Controls]", "ShowDurationRemaining") !== 0;
+    var shown = remainingMode ? Math.max(0, duration - elapsed) : elapsed;
+    DDJ1000.send(status, D.timeMode, remainingMode ? 0x7F : 0x00);
+    DDJ1000.send(status, D.timeMinute, Math.min(99, Math.floor(shown / 60)));
+    DDJ1000.send(status, D.timeSecond, Math.floor(shown % 60));
+
+    // The position bar spins like a record at 33 1/3, not as track progress.
+    var turns = elapsed / DDJ1000.secondsPerRevolution();
+    DDJ1000.send14(0xB0 + deck - 1, D.positionBarMsb, Math.floor((turns - Math.floor(turns)) * 360) % 360);
+
+    // Like a CDJ/rekordbox, the jog display flashes once only a little track is left.
+    var nearEnd = duration - elapsed <= DDJ1000.settings.endOfTrackWarningSec;
+    DDJ1000.send(status, D.ringLed, nearEnd && !DDJ1000.blink ? 0x00 : 0x01);
 };
 
 // ---------------------------------------------------------------------------
@@ -787,8 +933,10 @@ DDJ1000.jumpToStart = function (channel, control, value, status, group) {
 
 DDJ1000.tempo = function (channel, control, value, status, group) {
     // Top of the slider is "-" (MSB 0x00), bottom is "+".
-    var x = DDJ1000.take14(status, control, value) * 2 - 1;
-    engine.setValue(group, "rate", x * (engine.getValue(group, "rate_dir") || 1));
+    var position = DDJ1000.take14(status, control, value);
+    if (position !== undefined) {
+        engine.setValue(group, "rate", (position * 2 - 1) * (engine.getValue(group, "rate_dir") || 1));
+    }
 };
 
 DDJ1000.masterTempo = function (channel, control, value, status, group) {
@@ -1549,9 +1697,12 @@ DDJ1000.viewLong = function (channel, control, value) {
 
 DDJ1000.samplerVolume = function (channel, control, value, status) {
     var level = DDJ1000.take14(status, control, value);
-    for (var i = 1; i <= DDJ1000.numSamplers(); i++) {
-        engine.setParameter("[Sampler" + i + "]", "volume", level);
+    if (level === undefined) {
+        return;
     }
+    DDJ1000.samplerGroups().forEach(function (group) {
+        engine.setParameter(group, "volume", level);
+    });
 };
 
 DDJ1000.samplerCue = function (channel, control, value) {
@@ -1600,10 +1751,10 @@ DDJ1000.applyColorFx = function () {
             if (engine.getValue(unit, "loaded_chain_preset") !== presets[DDJ1000.colorFx]) {
                 engine.setValue(unit, "loaded_chain_preset", presets[DDJ1000.colorFx]);
             }
-            engine.setValue(unit, "enabled", 1);
+            DDJ1000.override(unit, "enabled", 1);
         } else {
             // As in rekordbox, the COLOR knobs do nothing until an FX is chosen.
-            engine.setValue(unit, "enabled", 0);
+            DDJ1000.override(unit, "enabled", 0);
         }
     });
     DDJ1000.updateColorFxLeds();
@@ -1666,16 +1817,23 @@ DDJ1000.applyBeatFxDepth = function () {
     }
 };
 
+// CH SELECT: effect unit 1 on the selected source alone. MIC is Mixxx's
+// microphone channels. Put back as it was in shutdown().
 DDJ1000.routeBeatFx = function () {
-    var unit = DDJ1000.BEAT_FX_UNIT;
     var channel = DDJ1000.beatFx.channel;
-    DDJ1000.decks.forEach(function (deck) {
-        engine.setValue(unit, "group_[Channel" + deck + "]_enable", channel === deck ? 1 : 0);
-    });
-    engine.setValue(unit, "group_[Master]_enable", channel === "master" ? 1 : 0);
-    for (var i = 1; i <= DDJ1000.numSamplers(); i++) {
-        engine.setValue(unit, "group_[Sampler" + i + "]_enable", channel === "sampler" ? 1 : 0);
+    var routed;
+    if (typeof channel === "number") {
+        routed = [DDJ1000.group(channel)];
+    } else if (channel === "master") {
+        routed = ["[Master]"];
+    } else if (channel === "mic") {
+        routed = DDJ1000.microphoneGroups();
+    } else {
+        routed = DDJ1000.samplerGroups();
     }
+    DDJ1000.routingGroups().forEach(function (group) {
+        DDJ1000.override(DDJ1000.BEAT_FX_UNIT, "group_" + group + "_enable", routed.indexOf(group) >= 0 ? 1 : 0);
+    });
 };
 
 // The decks a ROLL acts on: the selected channel, or every playing deck on MASTER.
@@ -1733,8 +1891,11 @@ DDJ1000.beatFxChannel = function (channel, control, value) {
 };
 
 DDJ1000.beatFxLevel = function (channel, control, value, status) {
-    DDJ1000.beatFx.depth = DDJ1000.take14(status, control, value);
-    DDJ1000.applyBeatFxDepth();
+    var depth = DDJ1000.take14(status, control, value);
+    if (depth !== undefined) {
+        DDJ1000.beatFx.depth = depth;
+        DDJ1000.applyBeatFxDepth();
+    }
 };
 
 DDJ1000.beatFxOn = function (channel, control, value) {
@@ -1781,19 +1942,21 @@ DDJ1000.stopRoll = function (deck, slip) {
     }
 };
 
-// SHIFT + BEAT FX ON: RELEASE FX — Beat FX off and a vinyl brake on its channel.
+// SHIFT + BEAT FX ON: RELEASE FX — Beat FX off. With CH SELECT on one deck
+// (CH1-CH4) that deck also stops with a vinyl brake; MASTER, MIC and SAMPLER
+// never stop a deck.
 DDJ1000.releaseFx = function (channel, control, value) {
     DDJ1000.led(0x94, 0x43, value > 0);
     if (!value) {
         return;
     }
-    var decks = DDJ1000.beatFxDecks();
+    var target = DDJ1000.beatFx.channel;
     if (DDJ1000.beatFx.on) {
         DDJ1000.setBeatFxOn(false);
     }
-    decks.forEach(function (deck) {
-        engine.brake(deck, true);
-    });
+    if (typeof target === "number") {
+        engine.brake(target, true);
+    }
 };
 
 DDJ1000.beatDown = function (channel, control, value) {
@@ -1872,6 +2035,7 @@ DDJ1000.pageStep = function (deck, mode, direction, value, note) {
         print("DDJ-1000 pad palette test: deck 1 pads = " + DDJ1000.paletteBase
             + ".." + (DDJ1000.paletteBase + 7) + ", deck 2 pads = "
             + (DDJ1000.paletteBase + 8) + ".." + (DDJ1000.paletteBase + 15));
+        DDJ1000.queueAllPads();
         return;
     }
     if (mode === M.BEAT_JUMP) {
@@ -1905,6 +2069,7 @@ DDJ1000.samplerBankStep = function (deck, direction) {
     if (DDJ1000.numSamplers() < needed) {
         engine.setValue("[App]", "num_samplers", needed);
     }
+    DDJ1000.renderMode(deck, DDJ1000.MODE.SAMPLER);
 };
 
 DDJ1000.updateModeLeds = function (deck) {
@@ -1933,7 +2098,11 @@ DDJ1000.pad = function (channel, control, value, status) {
     if (DDJ1000.settings.padPaletteTest) {
         return;
     }
-    state.mode = mode;
+    // The unit changes mode by itself; a pad of another mode means it did.
+    if (state.mode !== mode) {
+        state.mode = mode;
+        DDJ1000.updateModeLeds(deck);
+    }
     var pressed = state.pressed[mode] || (state.pressed[mode] = {});
     if (value) {
         pressed[pad] = true;
@@ -1972,7 +2141,7 @@ DDJ1000.pad = function (channel, control, value, status) {
         }
         break;
     }
-    DDJ1000.renderPads(deck);
+    DDJ1000.renderMode(deck, mode);
 };
 
 DDJ1000.padHotCue = function (deck, number, value, shifted) {
@@ -2016,25 +2185,7 @@ DDJ1000.padFx = function (deck, entry, value) {
         return;
     }
     if (entry.brake || entry.spinback) {
-        // Slip keeps the timeline running underneath, so letting go drops
-        // back in where the track would have been.
-        if (value) {
-            state.slipBeforePadFx = engine.getValue(group, "slip_enabled");
-            engine.setValue(group, "slip_enabled", 1);
-            if (entry.brake) {
-                engine.brake(deck, true);
-            } else {
-                engine.spinback(deck, true);
-            }
-        } else {
-            if (entry.brake) {
-                engine.brake(deck, false);
-            } else {
-                engine.spinback(deck, false);
-            }
-            engine.setValue(group, "play", 1);
-            engine.setValue(group, "slip_enabled", state.slipBeforePadFx);
-        }
+        DDJ1000.padTrick(deck, entry.spinback, value);
         return;
     }
     if (entry.reverse) {
@@ -2052,13 +2203,47 @@ DDJ1000.padFx = function (deck, entry, value) {
         engine.setValue(unit, "loaded_chain_preset", entry.fx);
         DDJ1000.padFxUnitPreset[unitNumber] = entry.fx;
     }
-    DDJ1000.decks.forEach(function (d) {
-        engine.setValue(unit, "group_[Channel" + d + "]_enable", d === deck ? 1 : 0);
+    // Every route, not just the decks': a unit also on Main or the samplers
+    // would otherwise reach the whole mix.
+    var deckGroup = DDJ1000.group(deck);
+    DDJ1000.routingGroups().forEach(function (routed) {
+        engine.setValue(unit, "group_" + routed + "_enable", routed === deckGroup ? 1 : 0);
     });
     engine.setValue(unit, "mix", 1);
     engine.setValue(unit, "super1", entry.superValue !== undefined ? entry.superValue : 0.5);
     DDJ1000.applyBeats(unitNumber, entry.fx, entry.beats);
     engine.setValue(unit, "enabled", 1);
+};
+
+// Vinyl brake or backspin while held. Slip keeps the timeline running
+// underneath, so a deck that was playing drops back in where it would have
+// been; a deck that was paused stays paused, where it was.
+DDJ1000.padTrick = function (deck, spinback, value) {
+    var group = DDJ1000.group(deck);
+    var state = DDJ1000.deck[deck];
+    if (value) {
+        // With two trick pads held, keep the state from before the first.
+        if (!state.trickRestore) {
+            state.trickRestore = {
+                play: engine.getValue(group, "play"),
+                slip: engine.getValue(group, "slip_enabled"),
+            };
+        }
+        engine.setValue(group, "slip_enabled", 1);
+    }
+    if (spinback) {
+        engine.spinback(deck, value > 0);
+    } else {
+        engine.brake(deck, value > 0);
+    }
+    if (!value && state.trickRestore) {
+        // Play first: switching slip off then jumps to the slip position.
+        if (state.trickRestore.play) {
+            engine.setValue(group, "play", 1);
+        }
+        engine.setValue(group, "slip_enabled", state.trickRestore.slip);
+        state.trickRestore = null;
+    }
 };
 
 // SAMPLER: pad plays the slot from its start; SHIFT + pad stops it. An empty
@@ -2119,28 +2304,78 @@ DDJ1000.padKeyShift = function (deck, semitones) {
     engine.setValue(group, "pitch_adjust", current === semitones ? 0 : semitones);
 };
 
-// Compute pad colours and send only what changed: the mode on screen every
-// tick, every mode when allModes is set (the unit keeps a colour per note).
-DDJ1000.renderPads = function (deck, allModes) {
+// Pad colours are sent when something they show changes (connectPads(),
+// connectSamplers()), when a pad is pressed, and on the blink for the pads
+// that blink. send() skips colours the unit already has.
+
+// One pad's colour on both its channels (with and without SHIFT).
+DDJ1000.renderPad = function (deck, mode, page, pad) {
     var state = DDJ1000.deck[deck];
     if (!state || !DDJ1000.opened) {
         return;
     }
-    for (var mode = 0; mode < 8; mode++) {
-        if (!allModes && mode !== state.mode) {
-            continue;
-        }
-        for (var page = 1; page <= 2; page++) {
-            for (var pad = 0; pad < 8; pad++) {
-                var color = DDJ1000.settings.padPaletteTest
-                    ? DDJ1000.paletteBase + (deck === 2 ? 8 : 0) + pad
-                    : DDJ1000.padColor(deck, mode, page, pad);
-                var note = mode * 16 + (page - 1) * 8 + pad;
-                DDJ1000.send(DDJ1000.padStatus(deck, false), note, color);
-                DDJ1000.send(DDJ1000.padStatus(deck, true), note, color);
-            }
+    var note = mode * 16 + (page - 1) * 8 + pad;
+    DDJ1000.padBlinks = false;
+    var color = DDJ1000.settings.padPaletteTest
+        ? DDJ1000.paletteBase + (deck === 2 ? 8 : 0) + pad
+        : DDJ1000.padColor(deck, mode, page, pad);
+    if (DDJ1000.padBlinks) {
+        state.blinking[note] = [mode, page, pad];
+    } else {
+        delete state.blinking[note];
+    }
+    DDJ1000.send(DDJ1000.padStatus(deck, false), note, color);
+    DDJ1000.send(DDJ1000.padStatus(deck, true), note, color);
+};
+
+DDJ1000.renderMode = function (deck, mode) {
+    for (var page = 1; page <= 2; page++) {
+        for (var pad = 0; pad < 8; pad++) {
+            DDJ1000.renderPad(deck, mode, page, pad);
         }
     }
+};
+
+DDJ1000.renderBlinkingPads = function (deck) {
+    var blinking = DDJ1000.deck[deck].blinking;
+    Object.keys(blinking).forEach(function (note) {
+        var where = blinking[note];
+        DDJ1000.renderPad(deck, where[0], where[1], where[2]);
+    });
+};
+
+// Every pad of every deck: the modes on screen now, the rest from the timer,
+// one mode per tick, so the unit never gets a flood of pad messages.
+DDJ1000.queueAllPads = function () {
+    DDJ1000.padQueue = [];
+    DDJ1000.decks.forEach(function (deck) {
+        var onScreen = DDJ1000.deck[deck].mode;
+        DDJ1000.renderMode(deck, onScreen);
+        for (var mode = 0; mode < 8; mode++) {
+            if (mode !== onScreen) {
+                DDJ1000.padQueue.push([deck, mode]);
+            }
+        }
+    });
+};
+
+// A sampler changed: redraw its pad on the decks showing its bank.
+DDJ1000.renderSamplerPad = function (number) {
+    var bank = Math.floor((number - 1) / 8);
+    var pad = (number - 1) % 8;
+    DDJ1000.decks.forEach(function (deck) {
+        if (DDJ1000.deck[deck].samplerBank === bank) {
+            DDJ1000.renderPad(deck, DDJ1000.MODE.SAMPLER, 1, pad);
+            DDJ1000.renderPad(deck, DDJ1000.MODE.SAMPLER, 2, pad);
+        }
+    });
+};
+
+// A blinking colour: on on the blink, off in between. Marks the pad so the
+// timer redraws it on every blink.
+DDJ1000.blinkColor = function (on, off) {
+    DDJ1000.padBlinks = true;
+    return DDJ1000.blink ? on : off;
 };
 
 DDJ1000.padColor = function (deck, mode, page, pad) {
@@ -2157,9 +2392,8 @@ DDJ1000.padColor = function (deck, mode, page, pad) {
             return C.OFF;
         }
         var color = DDJ1000.rgbToPad(engine.getValue(group, "hotcue_" + number + "_color"));
-        var isLoop = engine.getValue(group, "hotcue_" + number + "_type") === 4;
-        if (isLoop && status === 2) {
-            return DDJ1000.blink ? color : C.OFF; // saved loop running
+        if (status === 2 && engine.getValue(group, "hotcue_" + number + "_type") === 4) {
+            return DDJ1000.blinkColor(color, C.OFF); // saved loop running
         }
         return color;
     }
@@ -2193,7 +2427,7 @@ DDJ1000.padColor = function (deck, mode, page, pad) {
         }
         // Key shift as in rekordbox: dim colour per page, the selected key blinks.
         if (Math.round(engine.getValue(group, "pitch_adjust")) === semitones) {
-            return DDJ1000.blink ? DDJ1000.RB.KEY_SHIFT_CENTRE : C.OFF;
+            return DDJ1000.blinkColor(DDJ1000.RB.KEY_SHIFT_CENTRE, C.OFF);
         }
         return pressed ? C.OFF : DDJ1000.RB.KEY_SHIFT[page - 1];
     }
