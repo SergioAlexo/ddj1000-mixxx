@@ -25,10 +25,15 @@ let now = 1000000;
 
 const defaults = {
     "[App],num_samplers": 16,
+    "[App],num_microphones": 4,
+    "[App],num_auxiliaries": 4,
+    "[App],num_preview_decks": 1,
     "[Controls],ShowDurationRemaining": 1,
 };
 const k = (g, c) => g + "," + c;
+let reads = 0;
 const get = (g, c) => {
+    reads++;
     const key = k(g, c);
     if (values.has(key)) return values.get(key);
     if (key in defaults) return defaults[key];
@@ -168,8 +173,8 @@ values.clear();
 sent = [];
 connections.length = 0;
 timers.clear();
-Object.assign(DDJ, { opened: false, sent: {}, colorFx: 0, heldUnits: {} });
-DDJ.beatFx = { position: 1, beatIndex: DDJ.config.defaultBeatIndex, target: "master", on: false, rolling: [] };
+Object.assign(DDJ, { opened: false, sent: {}, colorFx: 0, heldUnits: {}, overrides: {}, samplersConnected: 0, padQueue: [] });
+DDJ.beatFx = { position: 1, beatIndex: DDJ.config.defaultBeatIndex, target: null, on: false, rolling: [], rollSlip: false };
 settings.tempoRange = "10";
 settings.hardwareHeadphoneMix = false;
 DDJ.init("DDJ-1000", false);
@@ -409,6 +414,192 @@ console.log("memory cues ok");
     console.log("mono split toggle ok");
 }
 
+// ------------------------------------------- 12. review: mixxxdj/mixxx#17174
 
-DDJ.shutdown();
+// DECK 1/3 or 2/4 only redraws: KEY SYNC stays on and the load animation does
+// not play; a real track load still resets KEY SYNC and plays it.
+{
+    send(0x90, 0x65, 0x7F);
+    assert.strictEqual(DDJ.deck[1].keySync, true, "KEY SYNC on");
+    sent = [];
+    send(0x91, 0x72, 0x7F);
+    assert.strictEqual(DDJ.deck[1].keySync, true, "deck switch keeps KEY SYNC");
+    assert(!sent.some(([s, d1, d2]) => s === 0x9F && d1 <= 0x03 && d2 === 0x7F), "no load animation on a deck switch");
+    assert.strictEqual(last(0x90, 0x65), 0x7F, "KEY SYNC light redrawn");
+    set(g1, "track_loaded", 1); // Mixxx force-sets this on every load
+    assert.strictEqual(DDJ.deck[1].keySync, false, "a real load resets KEY SYNC");
+    assert.strictEqual(last(0x9F, 0x00), 0x7F, "a real load plays the animation");
+    advance(1100);
+    console.log("deck switch: no KEY SYNC reset, no load animation");
+}
+
+// After a full refresh the pads arrive a mode per tick, not in one burst.
+{
+    advance(1000);
+    sent = [];
+    send(0x91, 0x72, 0x7F);
+    const padMessages = () => sent.filter(([s]) => s >= 0x97 && s <= 0x9E).length;
+    assert(padMessages() <= 4 * 32, "only the modes on screen at once");
+    let before = padMessages();
+    for (let i = 0; i < 28; i++) {
+        advance(20);
+        assert(padMessages() - before <= 32 + 8, "at most one mode per tick");
+        before = padMessages();
+    }
+    assert.strictEqual(DDJ.padQueue.length, 0, "every mode drawn");
+    console.log("pad redraw spread over ticks ok");
+}
+
+// RELEASE FX never stops the mix: on MASTER only the Beat FX goes off; on a
+// channel that one deck brakes.
+{
+    const playing = ["[Channel1]", "[Channel2]", "[Channel3]"];
+    playing.forEach((g) => { set(g, "play", 1); set(g, "_brake", 0); });
+    send(0x94, 0x21, 0x7F); // ECHO
+    send(0x94, 0x14, 0x7F); // MASTER
+    send(0x94, 0x47, 0x7F); // on
+    assert.strictEqual(get(u1, "enabled"), 1);
+    send(0x94, 0x43, 0x7F);
+    send(0x94, 0x43, 0x00);
+    assert.strictEqual(get(u1, "enabled"), 0, "Beat FX off");
+    playing.forEach((g) => assert.strictEqual(get(g, "_brake"), 0, `${g} not braked on MASTER`));
+    send(0x94, 0x11, 0x7F); // CH2
+    send(0x94, 0x47, 0x7F);
+    send(0x94, 0x43, 0x7F);
+    assert.strictEqual(get("[Channel2]", "_brake"), 1, "CH2 brakes");
+    assert.strictEqual(get("[Channel1]", "_brake"), 0, "CH1 untouched");
+    assert.strictEqual(get("[Channel3]", "_brake"), 0, "CH3 untouched");
+    console.log("RELEASE FX: brakes only the selected channel");
+}
+
+// MIC routes the Beat FX to Mixxx's microphones.
+{
+    send(0x94, 0x15, 0x7F);
+    assert.strictEqual(get(u1, "group_[Microphone]_enable"), 1);
+    assert.strictEqual(get(u1, "group_[Microphone4]_enable"), 1);
+    assert.strictEqual(get(u1, "group_[Master]_enable"), 0);
+    assert.strictEqual(get(u1, "group_[Channel2]_enable"), 0);
+    console.log("CH SELECT MIC -> microphones");
+}
+
+// PAD FX brake / backspin: a paused deck stays paused, a playing deck plays on,
+// slip goes back to what it was.
+{
+    const g = "[Channel3]";
+    send(0x92, 0x1B, 0x7F); // deck 3 HOT CUE... then PAD FX2
+    send(0x92, 0x6B, 0x7F);
+    set(g, "play", 0);
+    set(g, "slip_enabled", 0);
+    send(0x9B, 0x50, 0x7F); // PAD FX2 page 1 pad 1: brake
+    assert.strictEqual(get(g, "slip_enabled"), 1, "slip while held");
+    send(0x9B, 0x50, 0x00);
+    assert.strictEqual(get(g, "play"), 0, "paused deck stays paused");
+    assert.strictEqual(get(g, "slip_enabled"), 0, "slip restored");
+    set(g, "play", 1);
+    send(0x9B, 0x51, 0x7F); // backspin
+    set(g, "play", 0); // the backspin stopped the deck
+    send(0x9B, 0x51, 0x00);
+    assert.strictEqual(get(g, "play"), 1, "playing deck plays on");
+    assert.strictEqual(get(g, "slip_enabled"), 0, "slip restored");
+    console.log("PAD FX brake/backspin restore play and slip");
+}
+
+// A held PAD FX unit reaches this deck only, also when it was on Main or the samplers.
+{
+    const u4 = "[EffectRack1_EffectUnit4]";
+    set(u4, "group_[Master]_enable", 1);
+    set(u4, "group_[Sampler3]_enable", 1);
+    send(0x97, 0x1B, 0x7F); // PAD FX1 page 2 pad 4: whole unit 4
+    assert.strictEqual(get(u4, "group_[Channel1]_enable"), 1);
+    assert.strictEqual(get(u4, "group_[Master]_enable"), 0, "off Main while held");
+    assert.strictEqual(get(u4, "group_[Sampler3]_enable"), 0, "off the samplers while held");
+    send(0x97, 0x1B, 0x00);
+    assert.strictEqual(get(u4, "group_[Master]_enable"), 1, "Main routing restored");
+    assert.strictEqual(get(u4, "group_[Sampler3]_enable"), 1, "sampler routing restored");
+    assert.strictEqual(get(u4, "group_[Channel1]_enable"), 0);
+    console.log("held PAD FX unit isolated to its deck");
+}
+
+// Sampler banks stop at the samplers Mixxx has; samplers added later are connected.
+{
+    for (let i = 0; i < 10; i++) send(0x90, 0x7A, 0x7F); // SHIFT + PAGE >
+    assert.strictEqual(DDJ.deck[1].samplerBank, 1, "16 samplers: two banks");
+    assert.strictEqual(get("[App]", "num_samplers"), 16, "never adds samplers");
+    set("[App]", "num_samplers", 24);
+    send(0x90, 0x7A, 0x7F);
+    assert.strictEqual(DDJ.deck[1].samplerBank, 2, "a third bank once Mixxx has 24");
+    set("[Sampler20]", "pfl", 1);
+    assert.strictEqual(last(0x96, 0x69), 0x7F, "new sampler lights SAMPLER CUE");
+    set("[Sampler20]", "pfl", 0);
+    set("[App]", "num_samplers", 16);
+    console.log("sampler banks capped, new samplers connected");
+}
+
+// 14-bit inputs: the MSB alone never moves the tempo.
+{
+    send(0xB0, 0x00, 0x3F); send(0xB0, 0x20, 0x7F);
+    const rate = get(g1, "rate");
+    send(0xB0, 0x00, 0x40);
+    assert.strictEqual(get(g1, "rate"), rate, "MSB alone ignored");
+    send(0xB0, 0x20, 0x00);
+    assert(Math.abs(get(g1, "rate") - ((0x40 << 7) / 0x3FFF * 2 - 1)) < 1e-12, "applied with its LSB");
+    console.log("14-bit tempo applies on LSB");
+}
+
+// An idle tick reads only what the jog displays need.
+{
+    advance(300);
+    reads = 0;
+    advance(20 * 50);
+    assert(reads / 50 < 60, `${reads / 50} reads per tick`);
+    console.log(`idle timer: ${(reads / 50).toFixed(1)} control reads per tick`);
+}
+
+// A running saved loop blinks on its pad.
+{
+    DDJ.deck[1].mode = 0;
+    set(g1, "hotcue_2_color", 0x0000FF);
+    set(g1, "hotcue_2_type", 4);
+    set(g1, "hotcue_2_status", 2);
+    const seen = new Set();
+    for (let i = 0; i < 4; i++) { advance(250); seen.add(last(0x97, 0x01)); }
+    assert(seen.has(0) && seen.has(1), "blinks between blue and off");
+    set(g1, "hotcue_2_status", 1);
+    advance(250);
+    assert.strictEqual(last(0x97, 0x01), 1, "steady once the loop stops");
+    console.log("running saved loop blinks");
+}
+
+// shutdown() puts back what the mapping changed on its own, but leaves what
+// the user changed since.
+{
+    DDJ.shutdown();
+    values.clear();
+    sent = [];
+    connections.length = 0;
+    timers.clear();
+    Object.assign(DDJ, { opened: false, sent: {}, heldUnits: {}, overrides: {}, samplersConnected: 0, padQueue: [] });
+    DDJ.beatFx.target = null;
+    delete settings.hardwareHeadphoneMix;
+    settings.tempoRange = "16";
+    set("[Master]", "headMix", 0.3);
+    set("[Channel1]", "rateRange", 0.08);
+    set("[Channel2]", "rateRange", 0.08);
+    set(u1, "group_[Channel1]_enable", 1);
+    DDJ.init("DDJ-1000", false);
+    advance(50);
+    assert.strictEqual(get(u1, "group_[Channel1]_enable"), 1, "Beat FX routing untouched at startup");
+    assert.strictEqual(get("[Master]", "headMix"), -1);
+    send(0x94, 0x14, 0x7F); // MASTER
+    assert.strictEqual(get(u1, "group_[Master]_enable"), 1);
+    send(0x90, 0x60, 0x7F); // deck 1 TEMPO RANGE: the user's own change
+    DDJ.shutdown();
+    assert.strictEqual(get("[Master]", "headMix"), 0.3, "headphone mix restored");
+    assert.strictEqual(get(u1, "group_[Channel1]_enable"), 1, "Beat FX routing restored");
+    assert.strictEqual(get(u1, "group_[Master]_enable"), 0, "Beat FX routing restored");
+    assert.strictEqual(get("[Channel2]", "rateRange"), 0.08, "startup tempo range restored");
+    assert.strictEqual(get("[Channel1]", "rateRange"), 1.00, "range changed on the unit is kept");
+    console.log("shutdown restores headMix, tempo range and Beat FX routing");
+}
+
 console.log("\nALL UPSTREAM TESTS PASSED");
