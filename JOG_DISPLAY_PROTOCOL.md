@@ -1,92 +1,176 @@
-# DDJ-1000 jog display protocol (work in progress)
+# DDJ-1000 jog display protocol
 
-Derived by us from USB captures of rekordbox 7.2.18 talking to the unit (`captures/rekordbox-clean-*.pcap`,
-decoded with `tools/decode_capture.py` and `tools/jog_transfers.py`). Not copied from any other project.
+How the Pioneer DDJ-1000 draws artwork, a beat grid and an overview **waveform**
+on its two jog-wheel screens, and how to drive them with open software — no
+rekordbox, no firmware flash.
 
-Channel: HID interface #3 (usage page 0xFFA0, usage 1), interrupt OUT endpoint 0x06, 64-byte reports.
-Mixxx 2.5 already lists this device as a HID device (`2b73:0020`), so a `.hid.xml` + script can use
-`controller.send(data, length, reportId)`. The first byte of every captured packet (0x10, 0x20, 0x30, 0x40 =
-deck 1..4) is probably the HID report ID.
+**Status: solved and confirmed live** (macOS, Apple Silicon, firmware v1.12,
+2026-10-15). A custom waveform renders on a jog screen end-to-end from open code.
+Reverse-engineered from the owner's own hardware and firmware
+(`USB1_Ver.1120.bin`) plus Windows USBPcap captures of rekordbox 7.2.18
+(`captures/`). Reference implementation in [`tools/`](tools/) (the `ddj_*.py`
+scripts); see [`tools/ddj_jog_live.py`](tools/ddj_jog_live.py) for the whole chain.
 
-## Chunked transfers (types 0x2b, 0x2c, 0x2d, 0x2f)
+> Earlier revisions of this document concluded the display handshake depended on
+> an unknowable secret and gave up on the screens. That was wrong: the handshake
+> is FNV-1a + XOR with a universal constant, **no secret** (§3). This revision
+> supersedes that conclusion.
 
-    byte 0   deck << 4            (0x10 deck 1 ... 0x40 deck 4)
-    byte 1   type
-    byte 2   sequence number, 1..N
-    byte 3   0
-    byte 4-5 N = total number of packets of this transfer, little endian
-    byte 6.. 58 payload bytes (last packet zero padded); payloads are concatenated across the packets
+## 1. Two operating modes
 
-| type | meaning | payload |
+The jog screens have two modes; read the **HID interface-3 input report head** to
+tell them apart:
+
+| Mode | HID input head | Jog shows |
 |---|---|---|
-| 0x2b | artwork | u16 LE length, then a baseline **JPEG, 80x80** (1.5-2 KB, sent as 27-34 packets) |
-| 0x2f | beat grid | u16 LE count, then count x 4 bytes: beat in bar (1..4), position in **milliseconds** (u24 LE). Verified: size = 2 + 4*count exactly, gaps give 135.00 and 122.00 BPM. Only the first ~2 min / 275-342 beats seen |
-| 0x2c | waveform | 1 byte (0x80), then **600 columns x 7 bytes**: RGB565 colour A (u16 LE), RGB565 colour B (u16 LE), two heights (e.g. 12 and 1), 0x00. 73 packets, 4201 bytes used. Silence at the end is `f7 bd ff ff 01 01 00` (grey, white, 1, 1). Meaning of the heights and colours still to be decoded |
-| 0x2d | preview / track info (1 packet) | `02 <u24> 0a 00` then ten 5-byte entries `9e 2f 27 01 00`. The u24 looks like the track length in ms (01 39 03 = 211201 ms for the 3:31 track on deck 1) - to confirm |
+| MIDI / standard | `00 00` | platter/clock view: ring, time, BPM, cue, position |
+| HID / performance | `00 20` + live data | artwork + **waveform** + full performance UI |
 
-Order rekordbox uses when a track is loaded: beat grid, preview (twice), artwork, then the waveform about 0.4 s
-later. All four decks are cleared with empty transfers at startup.
+Performance mode **does not latch** — stop feeding it and the head reverts
+`00 20` → `00 00` within ~1 s. Internally this is the firmware's `model` value:
+`0x102` = MIDI/standard, `0x202` = HID/performance.
 
-## Live status packets, type 0x21 (partly decoded)
+The MIDI-mode platter view is fully driveable over MIDI alone (ring, time, BPM,
+cue, position — the official *DDJ-1000 MIDI Message List*). The waveform/artwork
+live only in HID performance mode, which the §3 handshake unlocks.
 
-`deck<<4, 0x21, ...`, about 120 per second per deck (bursts up to 1 kHz while the platter moves). Confirmed by replaying
-them to deck 1 from outside rekordbox: **the unit shows position and BPM from them with no handshake**, so this channel
-works for a Mixxx-side driver. Byte meanings found so far (indexes into the 64-byte packet):
+## 2. The full chain to a waveform on screen (all steps proven)
 
-| byte | observed | meaning (hypothesis) |
+1. **Go live.** Open the DDJ USB audio device **full-duplex** and stream silence;
+   this clears the "no audio driver" screen and makes the unit live. (Pioneer
+   VersionViewer must be running — see §6.)
+2. **Arm the cert.** Send the SysEx poll **`50 01`**
+   (`F0 00 40 05 00 00 02 00 00 50 01 F7`). The unit replies `11 02` (ready) and
+   beacons it every 1 s. This is rekordbox's arming poll; sending it ourselves
+   arms the unit identically.
+3. **Handshake** (§3): `0x12` → `0x13` → `0x14` → `0x15`. On accept, the HID input
+   head flips `00 00` → `00 20` (performance mode).
+4. **Leave the logo.** Replay rekordbox's post-handshake MIDI init burst (~413
+   short messages on channels `0x90`–`0x9F`), which takes the jog off the idle
+   Pioneer logo into the deck view.
+5. **Render.** Send a real beat grid (`0x2F`), artwork (`0x2B`), a playing status
+   (`0x21`), then the `0x2C` waveform. A real beat grid is required — it is the
+   waveform's time axis; an empty one is not enough.
+6. **Hold.** Keep the session alive with the continuous `0x21` status stream
+   (~125/s) **plus** the `50 01` keepalive (~5/s). Send the `0x2C` waveform **once**
+   — re-sending forces a full redraw (visible blink); the status stream keeps it
+   on screen.
+
+## 3. The unlock handshake (FNV-1a, no secret)
+
+Read directly out of the firmware (`cert_on_host_msg` → `FUN_1c081c1c` parser →
+`FUN_1c081a02` responder → `FUN_1c081e54` verifier). There is no secret and no
+real cryptography — the answers depend only on data on the wire plus fixed
+constants baked into firmware:
+
+| Primitive | Firmware addr | What it is |
 |---|---|---|
-| 2 | 0x18 normal; 0x19/0x1a/0x1b while scratching/seeking | flags, bit 0/1 = jog movement/direction |
-| 3 | 0x08 / 0x0a, 0x1a occasionally | bit 1 pulses with the beat (about every beat/bar) |
-| 4 | 0x11, 0x10 while the platter is touched, 0x21 at startup | bit 0 = platter not touched |
-| 5 | 0x00 / 0x01, 0x80 / 0x81 | bit 7 = playing, bit 0 = other flag (set from startup in one session) |
-| 9 | 0x10 no track, 0xb4 track loaded | track-loaded flag (0xbc seen too) |
-| 11 | 0, 1, 2 | small counter/state (changes when hot cues/loops are used?) |
-| 12-14 | 12 grows 1/s while playing, 13 and 14 low-order bits | playback position (multi-byte, exact encoding not worked out; 3 bytes) |
-| 15-18 | `02` then u24 LE, e.g. 01 39 03 = 211201 | track length in ms, same value as in the 0x30 packet; 0 if unknown |
-| 21-33, 38-39, 55-61 | change with loops, cues, jog | markers / loop points / BPM-pitch, not decoded |
+| `cert_calc` | `1c0819a4` | `a ^ b` (XOR) |
+| FNV-1a | `1c08a000` | `h = (h ^ byte) * 0x01000193`, init `0x811c9dc5` |
+| key derive | `1c08192c` | first 8 bytes of a string, each bitwise-NOT'd, then FNV-1a |
+| tag-5 checks | `1c089fec` + `1c08a048` | word-sum + transform vs a fixed 16-byte constant; input is only the tag-5 block itself |
 
-Type 0x30 (2 packets, seq 1 and 2, sent at load): `[deck<<4][0x30][seq][0][02 00]` + `02 <u24 track length ms> 00 00`.
+**Universal constant** (same on every unit): `k = FNV1a(~"PioneerD") = 0x680131FB`.
 
-Open question: nothing in these bytes looks like a "show waveform" switch. Replaying the real track's artwork, beat grid,
-waveform and 0x30/0x2d packets together with the status stream still only lit position and BPM on the screen, so the display
-mode is probably chosen somewhere else (a rekordbox setting sent in another message, or a mode of the unit itself).
+### Wire format
+`F0 00 40 05 00 00 02 00 00  <type> <len>  <TLV blocks>  F7`, with
+`len = 2 + Σ block lengths` and `block = <tag><blocklen=2+datalen><data>`. A 32-bit
+value is sent as **8 nibbles** (MSB first, one nibble in the low 4 bits of each
+byte). Types: `0x11` ready, `0x12` host challenge, `0x13` unit reply, `0x14` host
+response, `0x15` accepted; `0x50` arm poll; `0x03` position request.
 
-## Findings about the display layers (2026-10-10)
+### Exchange
+1. Unit → `11 02` (ready), beaconed once armed (§2.2).
+2. Host → `12`: tag1 `"PioneerDJ"`, tag2 `"rekordbox"`, tag3 = 8-byte random challenge `HC`.
+3. Unit → `13`: tag1 `"PioneerDJ"`, tag2 `"DDJ1000"`, tag4 = `FNV1a(HC ++ BE(k^r))`, tag3 = unit nonce `r`.
+   tag4 is **predictable** from `HC`, `k`, `r` — a self-check that the model is correct.
+4. Host → `14`: tag1, tag2, tag4 = **`FNV1a( BE(r) ++ BE(k^r) )`**, tag5 = fixed 10-byte block
+   `87 a0 8e ea c0 90 34 76 0b 90` (identical every session — its checks touch only itself).
+5. Unit → `15 02` = **accepted**; the HID artwork/waveform channel is unlocked for the session.
 
-* MIDI `9n 5D` = "display information" (0x00) / "hide information" (0x7F), per Pioneer's list. With it hidden the screen
-  falls back to the idle Pioneer DJ logo, even while the full HID stream is replayed.
-* Replaying everything rekordbox sent (clear, artwork, beat grid, waveform, 0x30, status packets) over HID to deck 1,
-  with no handshake, only ever drew **position and BPM**, never the waveform or artwork that rekordbox shows.
-* rekordbox always starts with a SysEx exchange: unit `11 02`, host `03 01` (position request, works on its own),
-  host `12 2A ...PioneerDJ...rekordbox... 03 <9 bytes>`, unit `13 2A ...PioneerDJ...DDJ1000... 04 <data>`,
-  host `14 38 ...rekordbox... 04 <data>`, unit `15 02`. The tokens differ in every session (three sessions compared), so it is a
-  challenge/response, not a fixed message. Replaying a recorded handshake got no reply from the unit.
-* Most likely the rich view (waveform + artwork) is only unlocked after that handshake. Not proven. Reproducing it would
-  mean working out how rekordbox derives its answer, which needs rekordbox's internals, and was deliberately not attempted.
+Implemented in [`tools/ddj_cert.py`](tools/ddj_cert.py) (run it for a self-test).
 
-### Handshake structure and black-box result (2026-10-10)
+## 4. HID channel
 
-Parsed from three sessions as TLV records (tag, length incl. the 2 header bytes, value; tokens are nibble-per-byte):
-* host `12 2A`: 1 "PioneerDJ", 2 "rekordbox", 3 = 8-byte random host challenge
-* unit `13 2A`: 1 "PioneerDJ", 2 "DDJ1000", 4 = 4-byte answer to the host challenge, 3 = 4-byte unit challenge
-* host `14 38`: 1, 2, 4 = 4-byte answer to the unit challenge, 5 = 10-byte block `87a08eeac09034760b90`, identical in all sessions
-* unit `15 02`: accepted
+Interface **3** (usage page `0xFFA0`, usage 1), 64-byte OUT reports, no report ID.
+`byte0` = `deck << 4` (`0x10`..`0x40` for decks 1–4), `byte1` = message type.
 
-The four-byte answers were tested (6 challenge/answer pairs) against crc32, adler32, md5, sha1/256/512, blake2, sha3, byte xor/add
-variants, with and without the visible strings and constant block as extra input: **no match**. The answers therefore depend on a
-secret that is not visible on the wire. Without that secret the handshake cannot be reproduced; getting it would mean extracting it from
-rekordbox (or the unit's firmware), which was deliberately not done.
+### Chunked transfers (`0x2B`, `0x2C`, `0x2D`, `0x2F`)
+```
+byte 0    deck << 4
+byte 1    type
+byte 2-3  sequence number (1..N), u16 LE
+byte 4-5  N = total packets of this transfer, u16 LE
+byte 6..  payload; payloads are concatenated across packets, last one zero-padded
+```
+(`0x2C` packet 1 carries one flag byte at offset 6, then payload from offset 7.)
 
-Experiments that did work: with a real rekordbox session running, the recorded artwork/beat grid/waveform transfers re-addressed to deck 3
-(`jog_replay.py replay ... 1 all 3`, left jog on deck 3) draw the waveform and artwork. Without rekordbox nothing is drawn.
-Mixxx also cannot run next to rekordbox here: Pioneer's ASIO driver (`ddj-1000_asio64.dll`) crashes Mixxx while rekordbox owns the device,
-even with Mixxx's audio on the Scarlett.
+| Type | Meaning | Payload |
+|---|---|---|
+| `0x2B` artwork | 27–34 pkts | u16 LE length, then a baseline **JPEG, 80×80** (≤ 10240 bytes). |
+| `0x2F` beat grid | — | u16 LE count, then count × 4 bytes: `beat-in-bar` (1..4), `position_ms` (u24 LE). Confirmed: size = `2 + 4·count`. |
+| `0x2C` waveform | 73 pkts, 4201 B | 1 flag byte, then **600 columns × 7 bytes** (see below). |
+| `0x2D` preview / track info | 1 pkt | `02 <u24 track length ms> 0a 00` then ten 5-byte entries. |
+| `0x30` track info | 2 pkts | `[deck<<4][0x30][seq][0][02 00]` + `02 <u24 track length ms> 00 00`. |
 
-## Still open
-* Waveform column fields (what the two heights and the two colours mean, how they scale with amplitude/frequency).
-* Status packet layout, 0x2d entries, other types (0x30/0x31, 0x40 seen on decks 3/4 only at startup).
-* Whether the unit needs the SysEx handshake before it accepts jog data (rekordbox always does it first).
-* Whether Mixxx can open the HID interface for output on Windows next to the MIDI mapping.
+### `0x2C` waveform column (7 bytes) — decoded
+```
+offset 0-1  colour A  RGB565, u16 LE   (outer bar)   — 0 selects firmware preset `preset`
+offset 2-3  colour B  RGB565, u16 LE   (inner bar)
+offset 4    height A  0..40 px         (outer bar, bottom-aligned)
+offset 5    height B  0..40 px         (inner bar, drawn over A, clamped ≤ A)
+offset 6    preset    0..7             (firmware preset colour when colour A == 0)
+```
+Flag byte (packet 1, offset 6): bit7 `0x80` = enable/show, bit6 `0x40` = centered
+(mirrored bars) vs bottom-aligned. Builders in
+[`tools/ddj_jog.py`](tools/ddj_jog.py) (`wave_point`, `wave_packets`, `rgb565`).
 
-Plan: generate test tracks with a known envelope (`tools/make_test_tracks.py`), load them in rekordbox, capture, and
-compare the column bytes with the known amplitude and frequency of each segment.
+### `0x21` live status (~120/s per deck)
+`[deck<<4][0x21]…`. Partly decoded; confirmed fields in **bold**:
+
+| byte | value | meaning |
+|---|---|---|
+| 2 | `0x18` normal; `0x19/1a/1b` scratching | jog movement/direction flags |
+| 3 | `0x08`/`0x0a` | pulses with the beat |
+| 4 | `0x11`; `0x10` while touched | bit 0 = platter not touched |
+| 5 | bit 7 | **playing** (bit 7 set = playing) |
+| 9 | **`0xb4` track loaded**, `0x10` none | track-loaded flag |
+| 12–14 | counter grows ~1/s while playing | **playback position** (u24-ish, exact encoding still open) |
+| 15 | `0x02` marker | precedes the track length |
+| 16–18 | u24 LE, e.g. `01 39 03` = 211201 | **track length in ms** |
+| 21–22 | `86 40` | BPM / pitch (not fully decoded) |
+| others | change with loops/cues/jog | markers / loop points |
+
+## 5. Order rekordbox uses
+On track load: beat grid → preview (×2) → artwork → waveform (~0.4 s later), with
+the `0x21` status stream running throughout. All four decks are cleared with empty
+transfers at startup.
+
+## 6. Operational gate: VersionViewer
+`/Applications/Pioneer/DDJ-1000/VersionViewer.app` (the "DDJ-1000 AutoLauncher")
+must be running, or the jog shows "no audio driver" and the cert stays asleep.
+VersionViewer alone leaves the unit in MIDI/standard mode; only the `50 01` poll
+(§2.2) arms the handshake. (An earlier note calling the AutoLauncher the villain
+was wrong — it is the operational gate, confirmed live.)
+
+## 7. Confirmed vs still open
+**Confirmed live:** the whole chain §2, the handshake §3 (our predicted `0x13`
+matched the unit exactly → `0x15` accept), performance-mode flip, and a custom
+`0x2C` waveform rendering with a real `0x2F` beat grid.
+
+**Still open:** exact encoding of the `0x21` position bytes (12–14) for a live
+playhead; the remaining `0x21` marker/loop/BPM bytes; the `0x2D` entry fields.
+
+## 8. Tools (`tools/`)
+| Script | What it does |
+|---|---|
+| `ddj_jog_live.py` | Standalone driver: full chain + a custom waveform, no capture at runtime. `python3 -I tools/ddj_jog_live.py --deck 1 --pattern square --hold 60` |
+| `ddj_cert.py` | Handshake crypto (FNV-1a, `k`, build/parse `0x12/0x13/0x14`); self-test when run directly. |
+| `ddj_jog.py` | HID packet builders (`wave_packets`, `art_packets`, `status_packet`, …); `python3 tools/ddj_jog.py selftest`. |
+| `ddj_jog_initdata.py` | Bundled init data (leave-logo burst + a real beat grid/artwork/status), retargetable to any deck. |
+| `ddj_full_unlock.py` | Minimal go-live + arm + handshake. |
+| `ddj_arm_test.py` | Minimal proof that `50 01` arms the cert and the handshake reaches `0x15`. |
+| `ddj_render_custom.py` / `ddj_render_capture.py` | Unlock + draw a custom / the captured waveform, context sourced live from a capture. |
+| `usbmidi_timeline.py` | Capture decoder (USB-MIDI reassembly + timeline). |
+
+Needs `python-rtmidi`, `sounddevice`, `hidapi` (`numpy` only for `--wav`).

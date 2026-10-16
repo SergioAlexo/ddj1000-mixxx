@@ -88,8 +88,11 @@ BACK: tree ↔ track list. VIEW: big library. Hold VIEW: add to the Auto DJ queu
 (Mixxx's nearest thing to rekordbox's tag list).
 
 ## Where Mixxx can't match rekordbox exactly
-- **Jog screen artwork and waveform** are drawn over a private Pioneer USB (HID)
-  protocol that only rekordbox speaks. Everything the MIDI spec allows is shown.
+- **Jog screen artwork and waveform** are drawn over a Pioneer USB (HID) protocol.
+  That protocol has now been reverse-engineered and is reproducible with open
+  software — see [`JOG_DISPLAY_PROTOCOL.md`](JOG_DISPLAY_PROTOCOL.md) and the
+  `tools/ddj_*.py` reference driver. This mapping still shows only what the MIDI
+  spec allows; wiring the HID jog screens into Mixxx is separate work.
 - **Effects sound different.** Mixxx has no Enigma Jet, Spiral or Mobius, so
   those are built from the closest Mixxx effects.
 - **The FX display** above BEAT FX shows what the unit knows itself (effect name
