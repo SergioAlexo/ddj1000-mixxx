@@ -90,6 +90,32 @@ response, `0x15` accepted; `0x50` arm poll; `0x03` position request.
 
 Implemented in [`tools/ddj_cert.py`](tools/ddj_cert.py) (run it for a self-test).
 
+### Control-position dump (`03 01`) — fader/knob sync on launch
+
+The unit does **not** report fader/knob positions on its own, so software that
+only listens starts out of sync with the hardware. rekordbox sends one SysEx on
+connect — **`F0 00 40 05 00 00 02 00 00 03 01 F7`** (`0x03` position request,
+same Pioneer envelope as the `50 01` arm) — and the unit answers **within ~1 ms**
+with a Control-Change dump of every absolute control on **all four decks** (MIDI
+channels `B0`–`B3`) and the mixer (`B4`/`B6`). Each is 14-bit: MSB on CC
+`0x00`–`0x1F`, LSB on CC +`0x20`. This is how rekordbox syncs its faders at
+startup. Works in plain MIDI mode — no handshake/performance-mode needed.
+
+Per-deck CC map (channel `B0` = deck 1), MSB / LSB:
+
+| CC (MSB/LSB) | Control |
+|---|---|
+| `0x00`/`0x20` | TEMPO slider |
+| `0x04`/`0x24` | channel TRIM (gain) |
+| `0x07`/`0x27` | EQ HI |
+| `0x0B`/`0x2B` | EQ MID |
+| `0x0F`/`0x2F` | EQ LOW |
+| `0x13`/`0x33` | channel fader (volume) |
+
+Decoded from `captures/decoded{3,4}/ep_85_t3.txt` (MIDI IN) against
+`ep_04_t3.txt` (MIDI OUT): the `03 01` request immediately precedes the dump in
+both captures (~0.7 ms apart).
+
 ## 4. HID channel
 
 Interface **3** (usage page `0xFFA0`, usage 1), 64-byte OUT reports, no report ID.
@@ -157,8 +183,9 @@ was wrong — it is the operational gate, confirmed live.)
 ## 7. Confirmed vs still open
 **Confirmed live:** the whole chain §2, the handshake §3 (our predicted `0x13`
 matched the unit exactly → `0x15` accept), performance-mode flip, a custom
-`0x2C` waveform rendering with a real `0x2F` beat grid, and the `0x21` position
-encoding (§4, bytes 11–13).
+`0x2C` waveform rendering with a real `0x2F` beat grid, `0x2B` artwork (real
+cover art from Mixxx), the `0x21` position encoding (§4, bytes 11–13), the
+`0x21` "no track" view (byte 9 = `0x10`), and `03 01` fader-position sync (§3).
 
 **Still open:** the spinning-platter graphic does not stay perfectly in sync
 (periodic skip) even with a smooth monotonic position stream — likely a separate
@@ -169,8 +196,9 @@ fields and the remaining marker/loop bytes.
 ## 8. Driving this from Mixxx (confirmed 2.7.0, live)
 
 A Mixxx mapping exists in the `sergioalexo/mixxx` fork, branch
-`ddj-1000-jog-displays` (rebased onto Mixxx `main`). The waveform renders live.
-Non-obvious things that had to be right:
+`ddj-1000-jog-displays` (rebased onto Mixxx `main`). The waveform, beat grid and
+cover art render live, the faders sync on launch, and empty decks show the
+not-loaded view. Non-obvious things that had to be right:
 
 - **Audio go-live gates the screen.** The jog stays on the loading animation
   until Mixxx opens the DDJ **full-duplex** (both an output *and* an input in
@@ -188,6 +216,30 @@ Non-obvious things that had to be right:
 - **Suppress MIDI-mode jog-display writes in performance mode.** Streaming the
   MIDI clock/time and platter-angle (`9n`/`Bn` position) while in HID performance
   mode fights the HID display and reverts the unit to the loading view.
+- **The jog handshake is opt-in** via a `jogDisplays` mapping setting, default
+  **off**. Off = the MIDI mapping stays plain MIDI exactly as before (no
+  handshake, MIDI jog-clock runs normally). The two Mixxx mappings are separate
+  controllers and cannot detect each other, so the user ticks this setting
+  together with enabling the HID mapping; on its own, performance mode leaves the
+  screens blank. Fader sync (`03 01`) is independent of this and always runs.
+- **Artwork needs a core hook.** Legacy controller scripts cannot read cover-art
+  bytes, so (like the waveform) a C++ `Q_INVOKABLE` was added:
+  `engine.getCoverArt(group, size, maxBytes)` in `controllerscriptinterfacelegacy.cpp`.
+  It loads the track's cover via `PlayerInfo`→`Track::getCoverInfoWithLocation().loadImage()`,
+  crops square, scales to 80×80, and re-encodes a **baseline** JPEG (quality
+  stepped down to fit `maxBytes`), returned as a JS byte array. The mapping sends
+  it once per load as `0x2B` (after the grid, before the waveform — rekordbox's
+  order). Requires a Mixxx rebuild.
+- **Empty decks need the "no track" status frame.** Send `0x21` with byte 9 =
+  `0x10` (not `0xb4`) for an unloaded deck; otherwise the jog sits on the loading
+  spinner forever instead of showing rekordbox's not-loaded view.
+- **Fader sync on launch = send `03 01`** (§3). The mapping requests the dump via
+  a one-shot ~300 ms after `init()` (MIDI output only opens after `init()`
+  returns). EQ/volume/trim are 14-bit XML controls with no soft-takeover, so the
+  dump applies directly. Tempo uses soft-takeover, which would swallow the dumped
+  value — so rate soft-takeover is armed by a second one-shot (~900 ms), *after*
+  the dumped tempo has landed, not in the `init()` loop. Pure mapping JS, no
+  rebuild.
 
 ## 9. Tools (`tools/`)
 | Script | What it does |
