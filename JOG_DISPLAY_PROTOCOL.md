@@ -135,7 +135,8 @@ Flag byte (packet 1, offset 6): bit7 `0x80` = enable/show, bit6 `0x40` = centere
 | 4 | `0x11`; `0x10` while touched | bit 0 = platter not touched |
 | 5 | bit 7 | **playing** (bit 7 set = playing) |
 | 9 | **`0xb4` track loaded**, `0x10` none | track-loaded flag |
-| 12–14 | counter grows ~1/s while playing | **playback position** (u24-ish, exact encoding still open) |
+| 11–13 | 24-bit **big-endian**, e.g. `00 00 7e` | **playback position** = elapsed_seconds × 256 (unit = 1/256 s). Decoded from the capture; byte 12 ticks once per track-second, field advances at 256/s scaled by deck tempo. Drives the jog's time/cursor. |
+| 14 | `0`–`3` | beat-in-bar phase |
 | 15 | `0x02` marker | precedes the track length |
 | 16–18 | u24 LE, e.g. `01 39 03` = 211201 | **track length in ms** |
 | 21–22 | `86 40` | BPM / pitch (not fully decoded) |
@@ -155,13 +156,40 @@ was wrong — it is the operational gate, confirmed live.)
 
 ## 7. Confirmed vs still open
 **Confirmed live:** the whole chain §2, the handshake §3 (our predicted `0x13`
-matched the unit exactly → `0x15` accept), performance-mode flip, and a custom
-`0x2C` waveform rendering with a real `0x2F` beat grid.
+matched the unit exactly → `0x15` accept), performance-mode flip, a custom
+`0x2C` waveform rendering with a real `0x2F` beat grid, and the `0x21` position
+encoding (§4, bytes 11–13).
 
-**Still open:** exact encoding of the `0x21` position bytes (12–14) for a live
-playhead; the remaining `0x21` marker/loop/BPM bytes; the `0x2D` entry fields.
+**Still open:** the spinning-platter graphic does not stay perfectly in sync
+(periodic skip) even with a smooth monotonic position stream — likely a separate
+platter field or a rate/timing detail; the per-beat-cycling `0x21` bytes
+(b21/b22, b31/b32, b55/b56, b3 beat pulse) are candidates. Also the `0x2D` entry
+fields and the remaining marker/loop bytes.
 
-## 8. Tools (`tools/`)
+## 8. Driving this from Mixxx (confirmed 2.7.0, live)
+
+A Mixxx mapping exists in the `sergioalexo/mixxx` fork, branch
+`ddj-1000-jog-displays` (rebased onto Mixxx `main`). The waveform renders live.
+Non-obvious things that had to be right:
+
+- **Audio go-live gates the screen.** The jog stays on the loading animation
+  until Mixxx opens the DDJ **full-duplex** (both an output *and* an input in
+  Sound Hardware). Output-only does not wake it. The DDJ exposes 12 input / 6
+  output channels; a Master output + any input (e.g. Auxiliary) suffices.
+- **Incoming SysEx needs an XML binding.** Mixxx only passes SysEx to a script's
+  `incomingData` when the `.midi.xml` declares a `<control>` with
+  `<status>0xF0</status>` and `<Script-Binding/>`. Without it the cert replies
+  (`0x11/0x13/0x15`) never reach the script and the handshake stalls after arming.
+- **HID output FIFO holds 32 reports**, drained one per IO-thread loop. Dumping
+  the 73-packet `0x2C` waveform at once overflows it; pace the burst in chunks.
+  Re-sending the waveform repeatedly floods the IO thread and makes the whole
+  jog display lag — send the beat grid once and the waveform as few times as
+  possible (the no-blink rule in §2.6 is also a performance requirement here).
+- **Suppress MIDI-mode jog-display writes in performance mode.** Streaming the
+  MIDI clock/time and platter-angle (`9n`/`Bn` position) while in HID performance
+  mode fights the HID display and reverts the unit to the loading view.
+
+## 9. Tools (`tools/`)
 | Script | What it does |
 |---|---|
 | `ddj_jog_live.py` | Standalone driver: full chain + a custom waveform, no capture at runtime. `python3 -I tools/ddj_jog_live.py --deck 1 --pattern square --hold 60` |
