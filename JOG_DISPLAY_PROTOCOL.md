@@ -165,7 +165,7 @@ inner height 0.5 × outer. Builders in
 
 | byte | value | meaning |
 |---|---|---|
-| 2 | `0x18` moving, **`0x1a` paused** | **bit 1 = deck paused/at rest**: the unit dims the platter. rekordbox sends `0x1a` while stopped and during the brake to a stop, `0x18` while playing (also during a CUE preview from pause). |
+| 2 | `0x18` normal, **`0x19` SLIP**, **`0x1a` paused**, **`0x1b` SLIP + paused** | **bit 0 = SLIP on**: the unit draws the jog screen red (rekordbox sets it for as long as SLIP is on). **bit 1 = deck paused/at rest**: the unit dims the platter. rekordbox sends `0x1a` while stopped and during the brake to a stop, `0x18` while playing (also during a CUE preview from pause). |
 | 3 | `0x08`/`0x0a` | pulses with the beat |
 | 4 | `0x11`; `0x10` while touched | bit 0 = platter not touched |
 | 5 | bit 7 | **playing** (bit 7 set = playing) |
@@ -299,6 +299,9 @@ not-loaded view. Non-obvious things that had to be right:
   since the engine reads it once per buffer), and switches it on again after a
   roll or track load. On platter release with SLIP on, end the scratch without the
   speed ramp. Confirmed on the unit.
+- **Red SLIP screen = `0x21` byte 2 bit 0** (§4). The HID mapping reads
+  `slip_enabled` and holds the bit ~150 ms after it goes off, so the 50 ms
+  slip-return gap does not flash the screen. Confirmed on the unit.
 
 ## 9. Tools (`tools/`)
 | Script | What it does |
