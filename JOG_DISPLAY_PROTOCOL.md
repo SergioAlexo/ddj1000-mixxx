@@ -136,8 +136,8 @@ byte 6..  payload; payloads are concatenated across packets, last one zero-padde
 | `0x2B` artwork | 27–34 pkts | u16 LE length, then a baseline **JPEG, 80×80** (≤ 10240 bytes). |
 | `0x2F` beat grid | — | u16 LE count, then count × 4 bytes: `beat-in-bar` (1..4), `position_ms` (u24 LE). Confirmed: size = `2 + 4·count`. |
 | `0x2C` waveform | 73 pkts, 4201 B | 1 flag byte, then **600 columns × 7 bytes** (see below). |
-| `0x2D` preview / track info | 1 pkt | `02 <u24 track length ms> 0a 00` then ten 5-byte entries. |
-| `0x30` track info | 2 pkts | `[deck<<4][0x30][seq][0][02 00]` + `02 <u24 track length ms> 00 00`. |
+| `0x2D` cue info | 1 pkt | **track length** (4-byte time, see `0x21`) + `0a 00` + ten × `9e 2f 27 01 00` (identical in every capture; meaning unknown, replay verbatim). Sent right after `0x30`. |
+| `0x30` hot-cue list | 2 pkts | **track length** (4-byte time) + **16 slots × 6 bytes** `[01][colour][4-byte time]`; empty slot = zeros. Colour = unit pad-colour number (rekordbox default green `0x16`). Sent after the beat grid on every load **and again on every cue change**. |
 
 ### `0x2C` waveform column (7 bytes) — decoded
 ```
@@ -161,12 +161,20 @@ Flag byte (packet 1, offset 6): bit7 `0x80` = enable/show, bit6 `0x40` = centere
 | 4 | `0x11`; `0x10` while touched | bit 0 = platter not touched |
 | 5 | bit 7 | **playing** (bit 7 set = playing) |
 | 9 | **`0xb4` track loaded**, `0x10` none | track-loaded flag |
-| 11–13 | 24-bit **big-endian**, e.g. `00 00 7e` | **playback position** = elapsed_seconds × 256 (unit = 1/256 s). Decoded from the capture; byte 12 ticks once per track-second, field advances at 256/s scaled by deck tempo. Drives the jog's time/cursor. |
-| 14 | `0`–`3` | beat-in-bar phase |
-| 15 | `0x02` marker | precedes the track length |
-| 16–18 | u24 LE, e.g. `01 39 03` = 211201 | **track length in ms** |
-| 21–22 | `86 40` | BPM / pitch (not fully decoded) |
-| others | change with loops/cues/jog | markers / loop points |
+| 11–14 | 4-byte time | **elapsed position**: `min, sec, ms (u16 LE)`, e.g. `00 09 84 01` = 0:09.388. Drives the time display and the spinning platter. |
+| 15–18 | 4-byte time | **track length**, same format (e.g. `03 31 c9 00` = 3:49.201). |
+| 21–22 | u16 LE | BPM `(tenths << 12) \| whole` (copy in 38–39); from capture |
+| 23–24 | s16 LE | pitch in 0.01 % units; from capture |
+| 31–33 | u24 LE | **CUE point, ms** |
+| 55–57 | u24 LE | **active cue, ms** |
+| 58 | `01` cue set, `03` hot cue, `00` none | **cue flags** |
+| others | change with loops/jog | markers / loop points |
+
+**Time format correction (confirmed on the unit):** an earlier reading of bytes
+11–13 as "24-bit BE, 1/256 s" was wrong. It put the 1/256 fraction into the ms
+field, so the platter ran 0–255 ms of each second and then jumped: the periodic
+platter skip. With `min, sec, ms` the platter spins correctly and the CUE marker
+appears (cue fields + `0x30`/`0x2D` sent on load).
 
 ## 5. Order rekordbox uses
 On track load: beat grid → preview (×2) → artwork → waveform (~0.4 s later), with
@@ -184,14 +192,13 @@ was wrong — it is the operational gate, confirmed live.)
 **Confirmed live:** the whole chain §2, the handshake §3 (our predicted `0x13`
 matched the unit exactly → `0x15` accept), performance-mode flip, a custom
 `0x2C` waveform rendering with a real `0x2F` beat grid, `0x2B` artwork (real
-cover art from Mixxx), the `0x21` position encoding (§4, bytes 11–13), the
-`0x21` "no track" view (byte 9 = `0x10`), and `03 01` fader-position sync (§3).
+cover art from Mixxx), the `0x21` time format (§4, bytes 11–18: min/sec/ms),
+the CUE marker (`0x21` bytes 31–33/55–58 + `0x30` hot-cue list + `0x2D`), a
+smoothly spinning platter during playback, the `0x21` "no track" view (byte 9 =
+`0x10`), and `03 01` fader-position sync (§3).
 
-**Still open:** the spinning-platter graphic does not stay perfectly in sync
-(periodic skip) even with a smooth monotonic position stream — likely a separate
-platter field or a rate/timing detail; the per-beat-cycling `0x21` bytes
-(b21/b22, b31/b32, b55/b56, b3 beat pulse) are candidates. Also the `0x2D` entry
-fields and the remaining marker/loop bytes.
+**Still open:** the `0x2D` entry fields, the remaining marker/loop bytes, and the
+meaning of the BPM/pitch bytes on screen (sent per the capture, not checked by eye).
 
 ## 8. Driving this from Mixxx (confirmed 2.7.0, live)
 
@@ -240,6 +247,13 @@ not-loaded view. Non-obvious things that had to be right:
   value — so rate soft-takeover is armed by a second one-shot (~900 ms), *after*
   the dumped tempo has landed, not in the `init()` loop. Pure mapping JS, no
   rebuild.
+- **Smooth platter needs a sample-accurate position.** Mixxx's `playposition`
+  control only updates at 15 Hz (`kPlaypositionUpdateRate`); streaming it as-is
+  makes the platter step. A third core hook,
+  `engine.getEnginePlayPosition(group)` (track fraction 0..1 from
+  `VisualPlayPosition::getEnginePlayPos()`, -1 if no track), plus a 5 ms
+  `engine.beginTimer` floor with `Qt::PreciseTimer` for an ~8 ms (≈ rekordbox
+  120 Hz) status stream, gave a smooth spin during playback (confirmed on the unit).
 
 ## 9. Tools (`tools/`)
 | Script | What it does |
