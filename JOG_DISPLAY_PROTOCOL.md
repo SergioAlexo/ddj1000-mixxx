@@ -167,7 +167,7 @@ inner height 0.5 × outer. Builders in
 |---|---|---|
 | 2 | `0x18` normal, **`0x19` SLIP**, **`0x1a` paused**, **`0x1b` SLIP + paused** | **bit 0 = SLIP on**: the unit draws the jog screen red (rekordbox sets it for as long as SLIP is on). **bit 1 = deck paused/at rest**: the unit dims the platter. rekordbox sends `0x1a` while stopped and during the brake to a stop, `0x18` while playing (also during a CUE preview from pause). |
 | 3 | **`0x0a` on air**, **`0x08` off air** | **bit 1 = ON AIR**: the jog screen is bright while set and dimmed while clear. rekordbox follows the channel fader (set while it is above 0), whether or not the deck plays. (An earlier note "pulses with the beat" was wrong.) |
-| 4 | `0x11`; `0x10` while touched | bit 0 = platter not touched |
+| 4 | **`0x11` ring lit**, **`0x10` ring dark** | **bit 0 = jog ring light**: the jog CPU's LED task (`route_hid` → `task_led` in `LCD_M`) lights the ring at the user brightness while it is set. rekordbox toggles it to blink the ring near the end of a track: ~1 s per step with 20–25 s left, ~0.2 s in the last second (decoded5 166–172 s). It sends no other message for the warning. (An earlier note "`0x10` while touched" was wrong.) |
 | 5 | bit 7 | **playing** (bit 7 set = playing) |
 | 9 | **`0xb4` track loaded**, `0x10` none | track-loaded flag |
 | 11–14 | 4-byte time | **elapsed position**: `min, sec, ms (u16 LE)`, e.g. `00 09 84 01` = 0:09.388. Drives the time display and the spinning platter. |
@@ -204,7 +204,8 @@ matched the unit exactly → `0x15` accept), performance-mode flip, a custom
 cover art from Mixxx), the `0x21` time format (§4, bytes 11–18: min/sec/ms),
 the CUE marker (`0x21` bytes 31–33/55–58 + `0x30` hot-cue list + `0x2D`), a
 smoothly spinning platter during playback, the `0x2C` colour scheme (§4), the `0x21` "no track" view (byte 9 =
-`0x10`), the ON AIR brightness bit (`0x21` byte 3 bit 1), and `03 01`
+`0x10`), the ON AIR brightness bit (`0x21` byte 3 bit 1), the jog ring light
+(`0x21` byte 4 bit 0, end-of-track blink), and `03 01`
 fader-position sync (§3).
 
 **Still open:** the `0x2D` entry fields, the remaining marker/loop bytes, and the
@@ -307,6 +308,12 @@ not-loaded view. Non-obvious things that had to be right:
   keeps the screen bright all the time. The HID mapping sets the bit while the
   channel `volume` is above 0 and the crossfader does not fully cut the deck's
   side (`orientation`), and clears it otherwise. Confirmed on the unit.
+- **End-of-track ring blink = `0x21` byte 4 bit 0** (§4). The unit does not
+  blink by itself, and the MIDI ring note (`9x 5B`) does nothing in performance
+  mode. The HID mapping toggles the bit in the last 30 s of a playing track,
+  one step every 1000 ms at 30 s left down to every 200 ms at the end
+  (`endWarningSeconds` / `endWarningSlowMs` / `endWarningFastMs`). Confirmed on
+  the unit.
 
 ## 9. Tools (`tools/`)
 | Script | What it does |
