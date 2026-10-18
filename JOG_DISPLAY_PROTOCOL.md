@@ -288,6 +288,17 @@ not-loaded view. Non-obvious things that had to be right:
   spinback runs as a scratch with the platter untouched, so any "released platter
   ends the scratch" logic must skip it (`engine.isBrakeActive` /
   `isSpinbackActive`), or it cuts the brake off on the next tick. Confirmed on the unit.
+- **SLIP needs the mapping to trigger the return.** The unit sends SLIP as a
+  plain note (`9n 40 7F` press / `00` release; rekordbox's map agrees) and the
+  mapping toggles. But Mixxx only jumps to the slip position when `slip_enabled`
+  goes **off**, and it keeps the speed it had when slip went on (zero if SLIP was
+  pressed on a paused deck). Mixxx 2.7 loop rolls also always switch slip off when
+  they end, even if it was on before. What works: the mapping keeps its own SLIP
+  state; when a scratch, pause, loop, REVERSE or PAD FX brake/backspin ends, it
+  switches `slip_enabled` off for 50 ms and back on (more than one audio buffer,
+  since the engine reads it once per buffer), and switches it on again after a
+  roll or track load. On platter release with SLIP on, end the scratch without the
+  speed ramp. Confirmed on the unit.
 
 ## 9. Tools (`tools/`)
 | Script | What it does |
