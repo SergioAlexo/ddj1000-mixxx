@@ -116,6 +116,34 @@ Decoded from `captures/decoded{3,4}/ep_85_t3.txt` (MIDI IN) against
 `ep_04_t3.txt` (MIDI OUT): the `03 01` request immediately precedes the dump in
 both captures (~0.7 ms apart).
 
+### BEAT FX screen BPM (`0b` + `0c`) — confirmed on the unit
+
+The FX screen above BEAT FX runs on its own with no software connected. Once a
+host is connected the unit shows the host's BPM instead, so software has to
+send it. rekordbox sends this pair whenever the BPM changes:
+
+```
+F0 00 40 05 00 00 02 00 00  00 0B  31 00 00 00 00 00        F7
+F0 00 40 05 00 00 02 00 00  00 0C  00 00 a b c d 00 00      F7
+```
+
+- Note the `00` before the type byte (unlike `03 01` / `50 01`).
+- `a b c d` = **BPM × 100**, one nibble per byte, MSB first:
+  `03 01 0a 06` = 0x31A6 = 127.10, `02 0f 09 04` = 121.80.
+- The BPM is that of the deck **CH SELECT** points at (capture: CH SELECT on
+  CH2; deck 1 played at ~134 while the screen stayed 120.00, then deck 2 loaded
+  and `0c` went to 121.80 within 25 ms). An empty deck is sent as **120.00**.
+- `0b`'s `31` byte: meaning unknown; send verbatim.
+- Works in plain MIDI mode as well. The jog init burst contains one
+  `0a`/`0b`/`0c` set (120.00), so resend the real BPM after replaying it.
+- Our Mixxx mapping uses the CH SELECT deck; for MASTER/MIC/SAMPLER it uses the
+  sync leader, else the first playing deck (rekordbox's choice there is not
+  captured).
+
+**Still open:** with a host connected the screen also stops showing FX SELECT
+changes. The long `0a` message (identical in every capture) probably carries
+the effect/beat state, but no capture turns FX SELECT/BEAT, so it is undecoded.
+
 ## 4. HID channel
 
 Interface **3** (usage page `0xFFA0`, usage 1), 64-byte OUT reports, no report ID.
@@ -205,8 +233,8 @@ cover art from Mixxx), the `0x21` time format (§4, bytes 11–18: min/sec/ms),
 the CUE marker (`0x21` bytes 31–33/55–58 + `0x30` hot-cue list + `0x2D`), a
 smoothly spinning platter during playback, the `0x2C` colour scheme (§4), the `0x21` "no track" view (byte 9 =
 `0x10`), the ON AIR brightness bit (`0x21` byte 3 bit 1), the jog ring light
-(`0x21` byte 4 bit 0, end-of-track blink), and `03 01`
-fader-position sync (§3).
+(`0x21` byte 4 bit 0, end-of-track blink), `03 01`
+fader-position sync (§3), and the BEAT FX screen BPM (`0b`/`0c`, §3).
 
 **Still open:** the `0x2D` entry fields, the remaining marker/loop bytes, and the
 meaning of the BPM/pitch bytes on screen (sent per the capture, not checked by eye).
