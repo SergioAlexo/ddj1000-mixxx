@@ -165,7 +165,7 @@ inner height 0.5 × outer. Builders in
 
 | byte | value | meaning |
 |---|---|---|
-| 2 | `0x18` normal; `0x19/1a/1b` scratching | jog movement/direction flags |
+| 2 | `0x18` moving, **`0x1a` paused** | **bit 1 = deck paused/at rest**: the unit dims the platter. rekordbox sends `0x1a` while stopped and during the brake to a stop, `0x18` while playing (also during a CUE preview from pause). |
 | 3 | `0x08`/`0x0a` | pulses with the beat |
 | 4 | `0x11`; `0x10` while touched | bit 0 = platter not touched |
 | 5 | bit 7 | **playing** (bit 7 set = playing) |
@@ -208,6 +208,15 @@ smoothly spinning platter during playback, the `0x2C` colour scheme (§4), the `
 
 **Still open:** the `0x2D` entry fields, the remaining marker/loop bytes, and the
 meaning of the BPM/pitch bytes on screen (sent per the capture, not checked by eye).
+Byte 5 bit 7 is not simply "playing": it stayed set through a 4-minute still deck
+in the capture; use byte 2 bit 1 for paused.
+
+**Decks 3/4 and empty decks (confirmed on the unit).** rekordbox sends **no** `0x21`
+for decks 3/4 in any capture, and for an empty deck only about one frame per
+second. Deck 3 shares the left jog with deck 1 (deck 4 with 2); streaming deck-3
+"no track" frames at a high rate made deck 1's platter stutter. Rule that works:
+an empty deck gets a 1 s keepalive, and only while its jog partner (deck ± 2) is
+empty too.
 
 ## 8. Driving this from Mixxx (confirmed 2.7.0, live)
 
@@ -263,6 +272,22 @@ not-loaded view. Non-obvious things that had to be right:
   `VisualPlayPosition::getEnginePlayPos()`, -1 if no track), plus a 5 ms
   `engine.beginTimer` floor with `Qt::PreciseTimer` for an ~8 ms (≈ rekordbox
   120 Hz) status stream, gave a smooth spin during playback (confirmed on the unit).
+- **Scratch/nudge lag: `engine.isScratching()` is per-controller.** Scratch state
+  lives in each script interface. The MIDI mapping starts the scratch, so the HID
+  mapping always saw `false` and kept smoothing during scratches, which lagged
+  the platter. Fix: read the shared `scratch2_enable` control instead, and
+  hard-bound the smoothed clock to within 12 ms of the engine position (covers
+  nudge/pitch-bend, which change speed without a scratch). rekordbox sends no
+  special "local render" flag while jogging; it just streams the position.
+  Confirmed on the unit.
+- **Pause = brake, like rekordbox.** In the capture rekordbox's pause brakes the
+  audio from 1× to 0 in ~0.52 s and the platter just follows the position. From
+  Mixxx: PLAY on a playing deck calls `engine.brake(deck, true, 60)` (factor 60 ≈
+  0.53 s), PLAY again during the brake cancels it. Send `0x21` byte 2 bit 1 when
+  `play == 0` and not scratching, so the platter dims only once stopped. A brake or
+  spinback runs as a scratch with the platter untouched, so any "released platter
+  ends the scratch" logic must skip it (`engine.isBrakeActive` /
+  `isSpinbackActive`), or it cuts the brake off on the next tick. Confirmed on the unit.
 
 ## 9. Tools (`tools/`)
 | Script | What it does |
