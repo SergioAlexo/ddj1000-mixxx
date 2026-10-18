@@ -148,7 +148,16 @@ offset 5    height B  0..40 px         (inner bar, drawn over A, clamped ≤ A)
 offset 6    preset    0..7             (firmware preset colour when colour A == 0)
 ```
 Flag byte (packet 1, offset 6): bit7 `0x80` = enable/show, bit6 `0x40` = centered
-(mirrored bars) vs bottom-aligned. Builders in
+(mirrored bars) vs bottom-aligned.
+
+**Colour scheme (confirmed on the unit).** rekordbox's own `0x2C` uses saturated
+hues: colour A's brightest channel is always **189**, colour B is the same hue at
+**255**, and the inner bar is short (median ≈ 0.23 × the outer height). Raw,
+unnormalized band levels come out nearly black in RGB565, and a white inner bar
+hides the colour. What works from Mixxx's 3-band overview: normalize each band
+(low→R, mid→G, high→B) to its own track peak, subtract ~0.6 × the smallest
+channel for saturation, then scale so the max channel = 189 (outer) / 255 (inner);
+inner height 0.5 × outer. Builders in
 [`tools/ddj_jog.py`](tools/ddj_jog.py) (`wave_point`, `wave_packets`, `rgb565`).
 
 ### `0x21` live status (~120/s per deck)
@@ -194,7 +203,7 @@ matched the unit exactly → `0x15` accept), performance-mode flip, a custom
 `0x2C` waveform rendering with a real `0x2F` beat grid, `0x2B` artwork (real
 cover art from Mixxx), the `0x21` time format (§4, bytes 11–18: min/sec/ms),
 the CUE marker (`0x21` bytes 31–33/55–58 + `0x30` hot-cue list + `0x2D`), a
-smoothly spinning platter during playback, the `0x21` "no track" view (byte 9 =
+smoothly spinning platter during playback, the `0x2C` colour scheme (§4), the `0x21` "no track" view (byte 9 =
 `0x10`), and `03 01` fader-position sync (§3).
 
 **Still open:** the `0x2D` entry fields, the remaining marker/loop bytes, and the
