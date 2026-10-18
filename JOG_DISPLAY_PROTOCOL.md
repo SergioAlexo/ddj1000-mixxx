@@ -116,33 +116,43 @@ Decoded from `captures/decoded{3,4}/ep_85_t3.txt` (MIDI IN) against
 `ep_04_t3.txt` (MIDI OUT): the `03 01` request immediately precedes the dump in
 both captures (~0.7 ms apart).
 
-### BEAT FX screen BPM (`0b` + `0c`) — confirmed on the unit
+### BEAT FX screen (`0a` name, `0b` beat, `0c` BPM) — confirmed on the unit
 
 The FX screen above BEAT FX runs on its own with no software connected. Once a
-host is connected the unit shows the host's BPM instead, so software has to
-send it. rekordbox sends this pair whenever the BPM changes:
+host is connected it shows **only what the host sends**: without these messages
+it freezes (FX SELECT no longer changes it). USB1 dispatches them in
+`FUN_1c091944` (byte 9 = `00`, byte 10 = type). All three carry a `00` before
+the type byte (unlike `03 01` / `50 01`):
 
 ```
-F0 00 40 05 00 00 02 00 00  00 0B  31 00 00 00 00 00        F7
-F0 00 40 05 00 00 02 00 00  00 0C  00 00 a b c d 00 00      F7
+F0 00 40 05 00 00 02 00 00  00 0A  00 <n+2> 00 <n>  <n packed bytes>  F7   effect name
+F0 00 40 05 00 00 02 00 00  00 0B  <6 packed bytes>                   F7   beat value
+F0 00 40 05 00 00 02 00 00  00 0C  00 00 a b c d 00 00                F7   BPM
 ```
 
-- Note the `00` before the type byte (unlike `03 01` / `50 01`).
-- `a b c d` = **BPM × 100**, one nibble per byte, MSB first:
-  `03 01 0a 06` = 0x31A6 = 127.10, `02 0f 09 04` = 121.80.
+- **7-bit packing** (`0a`, `0b`; unpacker `FUN_1c091af0`): the 8-bit data is one
+  LSB-first bit stream cut into 7-bit bytes (byte *i* of the data = bits
+  7*i*..7*i*+7 of the stream).
+- **`0a` name**: data = `00` + 32 ASCII bytes, zero-padded (33 bytes → n = 38
+  packed, header `00 28 00 26`). Stored at `fff87e88`. rekordbox's captured `0a`
+  unpacks to `"LOW CUT ECHO"`. We send the FX SELECT position's name
+  (LOW CUT ECHO, ECHO, MT DELAY, SPIRAL, REVERB, TRANS, ENIGMA JET, FLANGER,
+  PHASER, PITCH, SLIP ROLL, ROLL, MOBIUS SAW, MOBIUS TRI).
+- **`0b` beat**: data = 5 ASCII bytes (`"1"` → `31 00 00 00 00 00`). We send
+  `1/16 1/8 1/4 1/2 3/4 1 2 4 8 16 32`; these display correctly.
+- **`0c` BPM**: `a b c d` = **BPM × 100**, one nibble per byte, MSB first
+  (`03 01 0a 06` = 127.10, `02 0f 09 04` = 121.80); stored at `fff87eae`. Byte 17
+  = `00` sets a flag (`fff87eb2[1]`), byte 18 goes to `fff87eb2[2]`; meaning
+  unknown, send `00 00` as rekordbox does.
 - The BPM is that of the deck **CH SELECT** points at (capture: CH SELECT on
   CH2; deck 1 played at ~134 while the screen stayed 120.00, then deck 2 loaded
   and `0c` went to 121.80 within 25 ms). An empty deck is sent as **120.00**.
-- `0b`'s `31` byte: meaning unknown; send verbatim.
+  rekordbox sends `0b` + `0c` together, beat first, on every change.
 - Works in plain MIDI mode as well. The jog init burst contains one
-  `0a`/`0b`/`0c` set (120.00), so resend the real BPM after replaying it.
+  `0a`/`0b`/`0c` set (LOW CUT ECHO, 1, 120.00), so resend all three after it.
 - Our Mixxx mapping uses the CH SELECT deck; for MASTER/MIC/SAMPLER it uses the
   sync leader, else the first playing deck (rekordbox's choice there is not
   captured).
-
-**Still open:** with a host connected the screen also stops showing FX SELECT
-changes. The long `0a` message (identical in every capture) probably carries
-the effect/beat state, but no capture turns FX SELECT/BEAT, so it is undecoded.
 
 ## 4. HID channel
 
@@ -234,7 +244,7 @@ the CUE marker (`0x21` bytes 31–33/55–58 + `0x30` hot-cue list + `0x2D`), a
 smoothly spinning platter during playback, the `0x2C` colour scheme (§4), the `0x21` "no track" view (byte 9 =
 `0x10`), the ON AIR brightness bit (`0x21` byte 3 bit 1), the jog ring light
 (`0x21` byte 4 bit 0, end-of-track blink), `03 01`
-fader-position sync (§3), and the BEAT FX screen BPM (`0b`/`0c`, §3).
+fader-position sync (§3), and the BEAT FX screen name/beat/BPM (`0a`/`0b`/`0c`, §3).
 
 **Still open:** the `0x2D` entry fields, the remaining marker/loop bytes, and the
 meaning of the BPM/pitch bytes on screen (sent per the capture, not checked by eye).
