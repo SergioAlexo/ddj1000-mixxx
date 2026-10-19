@@ -294,6 +294,13 @@ not-loaded view. Non-obvious things that had to be right:
   Re-sending the waveform repeatedly floods the IO thread and makes the whole
   jog display lag — send the beat grid once and the waveform as few times as
   possible (the no-blink rule in §2.6 is also a performance requirement here).
+- **Wait for the complete overview.** Mixxx's analyser allocates a track's
+  overview waveform at full size and fills it in as it goes, so "has data" is
+  not "analysed": a track loaded mid-analysis got a partial waveform that was
+  never replaced. Treat it as ready only when `getCompletion() == getDataSize()`
+  (as `WOverview` does), and keep checking while the track is loaded: analysis
+  can take longer than any fixed timeout. Until then send an all-zero `0x2C`
+  (draws nothing and clears the previous track's waveform). Confirmed on the unit.
 - **Suppress MIDI-mode jog-display writes in performance mode.** Streaming the
   MIDI clock/time and platter-angle (`9n`/`Bn` position) while in HID performance
   mode fights the HID display and reverts the unit to the loading view.
