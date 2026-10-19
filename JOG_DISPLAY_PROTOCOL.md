@@ -154,6 +154,22 @@ F0 00 40 05 00 00 02 00 00  00 0C  00 00 a b c d 00 00                F7   BPM
   sync leader, else the first playing deck (rekordbox's choice there is not
   captured).
 
+### BEAT FX ON/OFF is `94 46` (latched state) — confirmed on the unit
+
+The MIDI spec lists BEAT FX ON/OFF as note `94 47`. The unit never sends that.
+It latches the button itself and sends its **state** on **`94 46`**: `7F` =
+on, `00` = off, once per press. The `03 01` position dump includes it, so
+software learns the state at launch. rekordbox sends `94 46 00` at startup
+(never `0x47`), so send the button light on `0x46` too. FX SELECT (`94 20`–`2D`),
+CH SELECT (`94 10`–`16`), LEVEL/DEPTH (`B4 02`/`22`) and BEAT ◀ ▶ (`94 4A`/`4B`)
+match the spec.
+
+**Mixxx:** effect slots in a standard unit start switched off, and chain presets
+don't store that switch. A mapping that only toggles the unit's `enabled` stays
+silent: also turn `[EffectRack1_EffectUnit1_EffectN],enabled` on. Mixxx also
+starts unit 1 on and routed to deck 1, so set it off at init. A paused deck is
+not processed, so echo/reverb tails stop with the track, unlike rekordbox.
+
 ## 4. HID channel
 
 Interface **3** (usage page `0xFFA0`, usage 1), 64-byte OUT reports, no report ID.

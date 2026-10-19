@@ -10,8 +10,14 @@ What it does (everything it changes is backed up first):
 
 Mixxx must be closed: it rewrites these files when it quits.
 
-Run:  python install.py            (install)
-      python install.py --dry-run  (show what would change)
+Run:  python install.py                 (install)
+      python install.py --dry-run       (show what would change)
+      python install.py --effects-only  (step 2 only; for the Mixxx-fork
+                                         mapping, which needs the Beat FX
+                                         presets but not this mapping)
+
+Works on Windows and macOS (the macOS settings folder is the sandboxed
+container one when it exists, as Mixxx 2.7 dev builds also use it).
 """
 
 import shutil
@@ -23,10 +29,22 @@ from pathlib import Path
 import os
 
 HERE = Path(__file__).resolve().parent
-MIXXX = Path(os.environ["LOCALAPPDATA"]) / "Mixxx"
+
+
+def mixxx_settings_dir():
+    if sys.platform == "win32":
+        return Path(os.environ["LOCALAPPDATA"]) / "Mixxx"
+    container = Path.home() / "Library/Containers/org.mixxx.mixxx/Data/Library/Application Support/Mixxx"
+    if container.exists():
+        return container
+    return Path.home() / "Library/Application Support/Mixxx"
+
+
+MIXXX = mixxx_settings_dir()
 MAPPING_XML = "Pioneer-DDJ-1000-Complete.midi.xml"
 MAPPING_JS = "Pioneer-DDJ-1000-Complete-scripts.js"
 DRY_RUN = "--dry-run" in sys.argv
+EFFECTS_ONLY = "--effects-only" in sys.argv
 
 # ---------------------------------------------------------------------------
 # Effect chain presets. Order matters: the script refers to them by position.
@@ -114,8 +132,10 @@ def log(message):
 
 
 def mixxx_running():
-    out = subprocess.run(["tasklist", "/FI", "IMAGENAME eq mixxx.exe"], capture_output=True, text=True).stdout
-    return "mixxx.exe" in out.lower()
+    if sys.platform == "win32":
+        out = subprocess.run(["tasklist", "/FI", "IMAGENAME eq mixxx.exe"], capture_output=True, text=True).stdout
+        return "mixxx.exe" in out.lower()
+    return subprocess.run(["pgrep", "-x", "mixxx"], capture_output=True).returncode == 0
 
 
 def effect_element(effect_name, overrides):
@@ -274,14 +294,15 @@ def main():
                 shutil.copy2(MIXXX / name, backup / name)
         log(f"backup: {backup}")
 
-    controllers = MIXXX / "controllers"
-    for name in [MAPPING_XML, MAPPING_JS]:
-        if DRY_RUN:
-            log(f"would copy {name}")
-        else:
-            controllers.mkdir(exist_ok=True)
-            shutil.copy2(HERE / "controllers" / name, controllers / name)
-    log("mapping copied to " + str(controllers))
+    if not EFFECTS_ONLY:
+        controllers = MIXXX / "controllers"
+        for name in [MAPPING_XML, MAPPING_JS]:
+            if DRY_RUN:
+                log(f"would copy {name}")
+            else:
+                controllers.mkdir(exist_ok=True)
+                shutil.copy2(HERE / "controllers" / name, controllers / name)
+        log("mapping copied to " + str(controllers))
 
     chains = MIXXX / "effects" / "chains"
     for name, effects in UNIT_PRESETS + QUICK_PRESETS:
@@ -289,6 +310,9 @@ def main():
     log(f"{len(UNIT_PRESETS) + len(QUICK_PRESETS)} DDJ effect presets written")
 
     patch_effects_xml()
+    if EFFECTS_ONLY:
+        log("done (effects only). Start Mixxx; FX SELECT positions now load the DDJ Beat FX presets.")
+        return
     patch_mixxx_cfg()
     patch_soundconfig()
     log("done. Start Mixxx; the DDJ-1000 lights up once the mapping loads.")
