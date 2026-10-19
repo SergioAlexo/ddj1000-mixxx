@@ -320,6 +320,13 @@ not-loaded view. Non-obvious things that had to be right:
   nudge/pitch-bend, which change speed without a scratch). rekordbox sends no
   special "local render" flag while jogging; it just streams the position.
   Confirmed on the unit.
+- **Call `engine.scratchDisable(deck, true)` once per release.** It resets the
+  ramp's "last movement" time, so Mixxx's next 1 ms scratch step reads the
+  platter as stopped. Called from a 20 ms timer on every tick, it kept the speed
+  dipping to ~0.95x and the ramp never got within 1e-5 of playing speed, so the
+  scratch never ended (`scratch2_enable` stayed 1) and the track fluttered after
+  every scratch. Hand back once; the ramp then ends ~250 ms after release.
+  Confirmed on the unit.
 - **Pause = brake, like rekordbox.** In the capture rekordbox's pause brakes the
   audio from 1× to 0 in ~0.52 s and the platter just follows the position. From
   Mixxx: PLAY on a playing deck calls `engine.brake(deck, true, 60)` (factor 60 ≈
