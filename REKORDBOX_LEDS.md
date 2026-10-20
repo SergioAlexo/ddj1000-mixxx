@@ -1,4 +1,4 @@
-# rekordbox vs. our mapping: pad colours and LEDs
+# What rekordbox sends to the LEDs and pads
 
 Source: `captures/rekordbox-clean-20261010-0152xx.pcap`, rekordbox 7.2.18 started fresh, DDJ-1000, no hot cues set,
 no sample loaded, a track loaded on deck 1 around t=80 s. Tools: `tools/pad_colors.py`, `tools/decode_capture.py`.
@@ -7,32 +7,32 @@ decks 3/4 = 0x9B-0x9E (rekordbox sends 0 there).
 
 ## Static pad colours (what rekordbox sends at init, colour number 1-127)
 
-| Mode | Page | rekordbox pads 1-8 | our mapping pads 1-8 |
-|---|---|---|---|
-| PAD FX 1 | 1 | 73 78 78 65 69 69 86 65 | 1 1 61 57 21 21 21 21 |
-| PAD FX 1 | 2 | 73 120 78 65 69 69 86 65 | 29 29 17 17 9 9 13 53 |
-| PAD FX 2 | 1 | 73 73 73 73 73 73 73 73 | 37 37 41 45 33 33 33 25 |
-| PAD FX 2 | 2 | 73 73 73 73 69 69 69 69 | 1 1 61 29 21 21 21 25 |
-| BEAT JUMP | 1 | 106 106 101 101 101 101 106 106 | 9 or 17 per direction |
-| BEAT JUMP | 2 | 63 x8 | same as page 1 |
-| SAMPLER | 1 | 63 x8 (nothing loaded) | off / 57 when loaded |
-| SAMPLER | 2 | 63 109 109 109 63 109 109 109 | off / 57 when loaded |
-| BEAT LOOP | 1 | 100 x8 | 21 x8 |
-| BEAT LOOP | 2 | 102 x8 | 21 x8 |
-| KEY SHIFT | 1 | 39 39 39 39 (0x74 blinks 64/0) 39 39 39 | 53, centre 29 |
-| KEY SHIFT | 2 | 9 x8 | 53 |
-| KEYBOARD | - | not lit in this capture (mode never entered) | 61, centre 29 |
-| HOT CUE | - | 0 (no cues set; colours not captured) | RGB converted by `rgbToPad` |
+| Mode | Page | rekordbox pads 1-8 |
+|---|---|---|
+| PAD FX 1 | 1 | 73 78 78 65 69 69 86 65 |
+| PAD FX 1 | 2 | 73 120 78 65 69 69 86 65 |
+| PAD FX 2 | 1 | 73 73 73 73 73 73 73 73 |
+| PAD FX 2 | 2 | 73 73 73 73 69 69 69 69 |
+| BEAT JUMP | 1 | 106 106 101 101 101 101 106 106 |
+| BEAT JUMP | 2 | 63 x8 |
+| SAMPLER | 1 | 63 x8 (nothing loaded) |
+| SAMPLER | 2 | 63 109 109 109 63 109 109 109 |
+| BEAT LOOP | 1 | 100 x8 |
+| BEAT LOOP | 2 | 102 x8 |
+| KEY SHIFT | 1 | 39 39 39 39 (0x74 blinks 64/0) 39 39 39 |
+| KEY SHIFT | 2 | 9 x8 |
+| KEYBOARD | - | not lit in this capture (mode never entered) |
+| HOT CUE | - | 0 (no cues set; colours not captured) |
 
 Observations
-* Our numbers come from a guessed hue wheel (1 blue ... 61 purple). rekordbox uses a different set of numbers,
-  mostly >= 64. The values 106/42, 101/38, 73/9 (differences of 64) suggest bit 6 is a brightness flag, but
-  Pioneer's list only says "colour number 1-127", so copying rekordbox's numbers is safer than relying on that.
-* Pressing a pad does not make rekordbox write that pad's colour (no write on pad channels at press time);
-  our mapping flashes pressed pads white.
+* rekordbox's colour numbers are mostly >= 64. The values 106/42, 101/38, 73/9 (differences of 64) suggest bit 6
+  is a brightness flag, but Pioneer's list only says "colour number 1-127", so copying rekordbox's numbers is safer
+  than relying on that.
+* In this capture, pressing a pad does not make rekordbox write that pad's colour (no write on pad channels at
+  press time). The second capture below shows that it does for held pads.
 * Key-shift centre pad (note 0x74) blinks 64/0 about every 0.4 s.
 * On a mode-button press rekordbox lights the button with value 59 (0x1B/0x1E/0x20/0x22 on 0x90/0x91),
-  our mapping sends 127. The unit switches mode itself on press.
+  not 127. The unit switches mode itself on press.
 
 ## Non-pad LEDs and init writes seen from rekordbox
 * 0x90-0x93: 0x0B (CUE) and 0x0C (PLAY) blink 127/0 when no track is loaded, 0x47 blinks with them (0x94 0x47 is FX on).

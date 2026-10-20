@@ -390,9 +390,7 @@ not-loaded view. Non-obvious things that had to be right:
 | `ddj_cert.py` | Handshake crypto (FNV-1a, `k`, build/parse `0x12/0x13/0x14`); self-test when run directly. |
 | `ddj_jog.py` | HID packet builders (`wave_packets`, `art_packets`, `status_packet`, …); `python3 tools/ddj_jog.py selftest`. |
 | `ddj_jog_initdata.py` | Bundled init data (leave-logo burst + a real beat grid/artwork/status), retargetable to any deck. |
-| `ddj_full_unlock.py` | Minimal go-live + arm + handshake. |
-| `ddj_arm_test.py` | Minimal proof that `50 01` arms the cert and the handshake reaches `0x15`. |
-| `ddj_render_custom.py` / `ddj_render_capture.py` | Unlock + draw a custom / the captured waveform, context sourced live from a capture. |
 | `usbmidi_timeline.py` | Capture decoder (USB-MIDI reassembly + timeline). |
 
 Needs `python-rtmidi`, `sounddevice`, `hidapi` (`numpy` only for `--wav`).
+Capture and analysis tools are described in [`CAPTURING.md`](CAPTURING.md).
