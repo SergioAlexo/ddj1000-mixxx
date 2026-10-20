@@ -6,9 +6,7 @@ HID channel behind a SysEx handshake. Everything here is enough to drive the
 screens from open software, with no rekordbox and no firmware changes.
 
 This repo is protocol only. The Mixxx mapping that uses it lives in the Mixxx fork:
-**[sergioalexo/mixxx, branch `ddj-1000-jog-displays`](https://github.com/sergioalexo/mixxx/tree/ddj-1000-jog-displays)**
-(`res/controllers/Pioneer-DDJ-1000*`, setup in
-[`Pioneer-DDJ-1000-JOG-README.md`](https://github.com/sergioalexo/mixxx/blob/ddj-1000-jog-displays/res/controllers/Pioneer-DDJ-1000-JOG-README.md)).
+**[sergioalexo/mixxx, branch `ddj-1000-jog-displays`](https://github.com/sergioalexo/mixxx/tree/ddj-1000-jog-displays)**.
 
 ## Documents
 
@@ -20,9 +18,8 @@ This repo is protocol only. The Mixxx mapping that uses it lives in the Mixxx fo
 | [`CAPTURING.md`](CAPTURING.md) | How to record and decode USB captures, the list of existing captures, the analysis and probe tools, and what still needs capturing. |
 
 The ordinary MIDI controls (buttons, knobs, faders, LEDs) are in AlphaTheta's
-**DDJ-1000 List of MIDI messages v1.00**, linked from the
-[DDJ-1000 MIDI-Compatible Software](https://support.pioneerdj.com/hc/en-us/articles/4404624474777-DDJ-1000-MIDI-Compatible-Software)
-page. A copy is in [`tools/refs/`](tools/refs/) (PDF + text extract).
+**[DDJ-1000 List of MIDI messages v1.00](https://downloads.support.alphatheta.com/software_info/dj-controllers/DDJ-1000/DDJ-1000_MIDI_Message_List_E1.pdf)**
+(PDF). A copy is in [`tools/refs/`](tools/refs/) (PDF + text extract).
 
 ## In short
 
