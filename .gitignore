@@ -13,3 +13,4 @@ __pycache__/
 firmware/images/
 firmware/cab/
 firmware/ghidra-project/
+firmware/*.exe
