@@ -8,3 +8,8 @@ __pycache__/
 *.pyc
 
 .DS_Store
+
+# Firmware is Pioneer's code - never committed (see firmware/README.md).
+firmware/images/
+firmware/cab/
+firmware/ghidra-project/

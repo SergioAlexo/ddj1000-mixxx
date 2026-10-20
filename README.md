@@ -16,6 +16,7 @@ This repo is protocol only. The Mixxx mapping that uses it lives in the Mixxx fo
 | [`PROTOCOL_REFERENCE.md`](PROTOCOL_REFERENCE.md) | Byte-by-byte tables of every SysEx and HID message found in the captures, including unknown bytes and messages we only know exist. Each byte is tagged confirmed / capture / unknown. |
 | [`REKORDBOX_LEDS.md`](REKORDBOX_LEDS.md) | What rekordbox sends to the pad and button LEDs (colour numbers per pad mode, init writes). |
 | [`CAPTURING.md`](CAPTURING.md) | How to record and decode USB captures, the list of existing captures, the analysis and probe tools, and what still needs capturing. |
+| [`firmware/`](firmware/README.md) | Firmware analysis: extracting the CPU images from Pioneer's updater, Ghidra scripts and saved function names, and the notes the handshake and message layouts came from. |
 
 The ordinary MIDI controls (buttons, knobs, faders, LEDs) are in AlphaTheta's
 **[DDJ-1000 List of MIDI messages v1.00](https://downloads.support.alphatheta.com/software_info/dj-controllers/DDJ-1000/DDJ-1000_MIDI_Message_List_E1.pdf)**
@@ -53,4 +54,4 @@ Windows yet.
 ## Not in this repo
 
 - USB captures (`captures/`, hundreds of MB each; see `CAPTURING.md`).
-- The unit's firmware and Ghidra projects used to derive the handshake.
+- The firmware images and the Ghidra project (Pioneer's code). `firmware/README.md` says where to get the updater and how to rebuild both.
