@@ -138,12 +138,26 @@ F0 00 40 05 00 00 02 00 00  00 0C  00 00 a b c d 00 00                F7   BPM
   unpacks to `"LOW CUT ECHO"`. We send the FX SELECT position's name
   (LOW CUT ECHO, ECHO, MT DELAY, SPIRAL, REVERB, TRANS, ENIGMA JET, FLANGER,
   PHASER, PITCH, SLIP ROLL, ROLL, MOBIUS SAW, MOBIUS TRI).
-- **`0b` beat**: data = 5 ASCII bytes (`"1"` → `31 00 00 00 00 00`). We send
-  `1/16 1/8 1/4 1/2 3/4 1 2 4 8 16 32`; these display correctly.
+- **`0b` beat**: data = 5 ASCII bytes (`"1"` → `31 00 00 00 00 00`), stored at
+  `fff87ea8`. Shown **under the effect name** (where the unit shows the effect
+  parameter when standalone). We send `1/16 1/8 1/4 1/2 3/4 1 2 4 8 16 32`.
+  The unit redraws it **only after a `0a`**: a `0b` (+ `0c`) alone stores the
+  value but the field stays as it was, so resend the name with every beat change.
+- **Space the messages out.** Several FX screen messages arriving back to back
+  (same USB transfer) keep only the last one: `0b`+`0c` showed the BPM but not
+  the beat, `0a`+`0b`+`0c` left the screen blank. rekordbox sends them 2–4 ms
+  apart; our mapping sends one per 20 ms tick, order `0a`, `0b`, `0c`. Confirmed
+  on the unit.
+- **`0a` takes only the unit's own effect names.** An unknown name (`"X FLANGER"`)
+  is ignored and the last valid name stays; custom text cannot go in this field.
+- **Host messages need the unlocked session.** Sent with only the `50 01` poll
+  (no cert handshake) the unit stays standalone and ignores `0a`/`0b`/`0c`.
 - **`0c` BPM**: `a b c d` = **BPM × 100**, one nibble per byte, MSB first
   (`03 01 0a 06` = 127.10, `02 0f 09 04` = 121.80); stored at `fff87eae`. Byte 17
-  = `00` sets a flag (`fff87eb2[1]`), byte 18 goes to `fff87eb2[2]`; meaning
-  unknown, send `00 00` as rekordbox does.
+  = `00` sets a flag (`fff87eb2[1]`) that shows the **AUTO** label next to the
+  BPM; byte 17 = `01` hides it (**TAP**: we send `01` while the BPM is tapped
+  with SHIFT + BEAT ▶) — confirmed on the unit. Byte 18 goes to
+  `fff87eb2[2]`, meaning unknown; send `00` as rekordbox does.
 - The BPM is that of the deck **CH SELECT** points at (capture: CH SELECT on
   CH2; deck 1 played at ~134 while the screen stayed 120.00, then deck 2 loaded
   and `0c` went to 121.80 within 25 ms). An empty deck is sent as **120.00**.
