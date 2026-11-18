@@ -1,0 +1,481 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="2410" viewBox="0 0 1280 2410">
+<defs><filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+<rect width="1280" height="2410" fill="#0f0f12"/>
+<text x="40" y="66" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="30" font-weight="700" fill="#ececf1" text-anchor="start">DDJ-1000 in Mixxx: what the pads mean</text>
+<text x="40" y="92" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#9a9aa6" text-anchor="start">Pad colours of the rekordbox-style mapping (fork branch ddj-1000-jog-displays). Pads read top row first, left to right.</text>
+<rect x="40" y="116" width="40" height="26" rx="6" fill="#ff8000" filter="url(#glow)"/>
+<text x="90" y="128" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#ececf1" text-anchor="start">Bright</text>
+<text x="90" y="143" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">active / held / hot cue</text>
+<rect x="310" y="116" width="40" height="26" rx="6" fill="#6b3e10"/>
+<text x="360" y="128" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#ececf1" text-anchor="start">Dim</text>
+<text x="360" y="143" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">at rest</text>
+<rect x="580" y="116" width="40" height="26" rx="6" fill="#26262b"/>
+<path d="M586,116 H614 Q620,116 620,122 V136 Q620,142 614,142 Z" fill="#ff8000"/>
+<rect x="580" y="116" width="40" height="26" rx="6" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="630" y="128" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#ececf1" text-anchor="start">Blink</text>
+<text x="630" y="143" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">running / current</text>
+<rect x="850" y="116" width="40" height="26" rx="6" fill="#26262b"/>
+<text x="900" y="128" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#ececf1" text-anchor="start">Off</text>
+<text x="900" y="143" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">empty / unused</text>
+<text x="40" y="166" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="600" fill="#ff8a1f" text-anchor="start">In HOT CUE mode, orange always means a saved loop: regular hot cues never light orange.</text>
+<rect x="24" y="192" width="1232" height="252" rx="14" fill="#18181d"/>
+<text x="40" y="222" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#ececf1" text-anchor="start">COLOUR NAMES</text>
+<text x="215" y="222" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#9a9aa6" text-anchor="start">bright / dim, with the colour numbers the mapping sends</text>
+<rect x="40" y="240" width="26" height="26" rx="6" fill="#ff000b" filter="url(#glow)"/>
+<rect x="70" y="240" width="26" height="26" rx="6" fill="#6b1014"/>
+<text x="104" y="252" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#ececf1" text-anchor="start">Red  </text>
+<text x="138" y="252" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">42 / 106</text>
+<text x="104" y="267" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="normal" fill="#9a9aa6" text-anchor="start">BEAT JUMP</text>
+<rect x="340" y="240" width="26" height="26" rx="6" fill="#ff6000" filter="url(#glow)"/>
+<rect x="370" y="240" width="26" height="26" rx="6" fill="#6b3e10"/>
+<text x="404" y="252" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#ececf1" text-anchor="start">Orange  </text>
+<text x="462" y="252" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">38 / 101</text>
+<text x="404" y="267" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="normal" fill="#9a9aa6" text-anchor="start">BEAT JUMP (dim 101), BEAT LOOP p2 (dim 102)</text>
+<rect x="640" y="240" width="26" height="26" rx="6" fill="#ff8000" filter="url(#glow)"/>
+<rect x="670" y="240" width="26" height="26" rx="6" fill="#6b4310"/>
+<text x="704" y="252" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#ececf1" text-anchor="start">Amber orange  </text>
+<text x="810" y="252" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">37 / 100</text>
+<text x="704" y="267" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="normal" fill="#9a9aa6" text-anchor="start">saved loop hot cues, BEAT LOOP p1</text>
+<rect x="940" y="240" width="26" height="26" rx="6" fill="#ff4000" filter="url(#glow)"/>
+<text x="1004" y="252" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#ececf1" text-anchor="start">Red-orange  </text>
+<text x="1094" y="252" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">39</text>
+<text x="1004" y="267" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="normal" fill="#9a9aa6" text-anchor="start">KEY SHIFT up</text>
+<rect x="40" y="290" width="26" height="26" rx="6" fill="#0066ff" filter="url(#glow)"/>
+<rect x="70" y="290" width="26" height="26" rx="6" fill="#10346b"/>
+<text x="104" y="302" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#ececf1" text-anchor="start">Azure  </text>
+<text x="154" y="302" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">9 / 73</text>
+<text x="104" y="317" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="normal" fill="#9a9aa6" text-anchor="start">PAD FX roll / trans / slip, KEY SHIFT down</text>
+<rect x="340" y="290" width="26" height="26" rx="6" fill="#00bfff" filter="url(#glow)"/>
+<rect x="370" y="290" width="26" height="26" rx="6" fill="#10546b"/>
+<text x="404" y="302" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#ececf1" text-anchor="start">Sky blue  </text>
+<text x="478" y="302" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">14 / 78</text>
+<text x="404" y="317" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="normal" fill="#9a9aa6" text-anchor="start">PAD FX sweep / flanger / filter</text>
+<rect x="640" y="290" width="26" height="26" rx="6" fill="#0000ff" filter="url(#glow)"/>
+<rect x="670" y="290" width="26" height="26" rx="6" fill="#10106b"/>
+<text x="704" y="302" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#ececf1" text-anchor="start">Blue  </text>
+<text x="746" y="302" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">1 / 65</text>
+<text x="704" y="317" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="normal" fill="#9a9aa6" text-anchor="start">PAD FX release FX (R)</text>
+<rect x="940" y="290" width="26" height="26" rx="6" fill="#0033ff" filter="url(#glow)"/>
+<rect x="970" y="290" width="26" height="26" rx="6" fill="#10226b"/>
+<text x="1004" y="302" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#ececf1" text-anchor="start">Royal blue  </text>
+<text x="1094" y="302" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">5 / 69</text>
+<text x="1004" y="317" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="normal" fill="#9a9aa6" text-anchor="start">PAD FX echo / delay</text>
+<rect x="40" y="340" width="26" height="26" rx="6" fill="#25ff00" filter="url(#glow)"/>
+<rect x="70" y="340" width="26" height="26" rx="6" fill="#1d6b10"/>
+<text x="104" y="352" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#ececf1" text-anchor="start">Green  </text>
+<text x="154" y="352" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">22 / 86</text>
+<text x="104" y="367" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="normal" fill="#9a9aa6" text-anchor="start">PAD FX reverb / space, rekordbox green cue</text>
+<rect x="340" y="340" width="26" height="26" rx="6" fill="#ff00df" filter="url(#glow)"/>
+<rect x="370" y="340" width="26" height="26" rx="6" fill="#6b1060"/>
+<text x="404" y="352" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#ececf1" text-anchor="start">Purple  </text>
+<text x="462" y="352" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">56 / 120</text>
+<text x="404" y="367" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="normal" fill="#9a9aa6" text-anchor="start">PAD FX crush</text>
+<rect x="640" y="340" width="26" height="26" rx="6" fill="#ff00ff" filter="url(#glow)"/>
+<text x="704" y="352" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#ececf1" text-anchor="start">Magenta  </text>
+<text x="770" y="352" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">57</text>
+<text x="704" y="367" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="normal" fill="#9a9aa6" text-anchor="start">SAMPLER loaded</text>
+<rect x="940" y="340" width="26" height="26" rx="6" fill="#00ff00" filter="url(#glow)"/>
+<rect x="970" y="340" width="26" height="26" rx="6" fill="#106b10"/>
+<text x="1004" y="352" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#ececf1" text-anchor="start">Lime green  </text>
+<text x="1094" y="352" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">21 / 85</text>
+<text x="1004" y="367" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="normal" fill="#9a9aa6" text-anchor="start">KEY SHIFT key sync</text>
+<rect x="40" y="390" width="26" height="26" rx="6" fill="#ffff00" filter="url(#glow)"/>
+<rect x="70" y="390" width="26" height="26" rx="6" fill="#6b6b10"/>
+<text x="104" y="402" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#ececf1" text-anchor="start">Yellow  </text>
+<text x="162" y="402" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">29 / 93</text>
+<text x="104" y="417" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="normal" fill="#9a9aa6" text-anchor="start">KEY SHIFT key reset</text>
+<rect x="340" y="390" width="26" height="26" rx="6" fill="#ffbf00" filter="url(#glow)"/>
+<rect x="370" y="390" width="26" height="26" rx="6" fill="#6b5410"/>
+<text x="404" y="402" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#ececf1" text-anchor="start">Gold  </text>
+<text x="446" y="402" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">33 / 97</text>
+<text x="404" y="417" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="normal" fill="#9a9aa6" text-anchor="start">KEY SHIFT semitone up / down</text>
+<rect x="640" y="390" width="26" height="26" rx="6" fill="#f4f4f6" filter="url(#glow)"/>
+<text x="704" y="402" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#ececf1" text-anchor="start">White  </text>
+<text x="754" y="402" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">127</text>
+<text x="704" y="417" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="normal" fill="#9a9aa6" text-anchor="start">SAMPLER playing (blink), loop buttons</text>
+<rect x="24" y="458" width="1232" height="220" rx="14" fill="#18181d"/>
+<text x="40" y="488" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#ececf1" text-anchor="start">HOT CUE</text>
+<text x="190" y="488" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#9a9aa6" text-anchor="start">HOT CUE button. Two pages of 8 hot cues.</text>
+<text x="40" y="510" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#ececf1" text-anchor="start">•  A hot cue lights in its Mixxx colour (nearest of the pad&#x27;s 61 colours). Bright.</text>
+<text x="40" y="528" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#ececf1" text-anchor="start">•  A saved loop is always ORANGE, and blinks while it runs. Orange means loop, nothing else.</text>
+<text x="40" y="546" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#ececf1" text-anchor="start">•  New hot cues get a random colour (never orange, never the same twice in a row). Empty pads are off.</text>
+<text x="40" y="578" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#9a9aa6" text-anchor="start">example</text>
+<rect x="40" y="586" width="50" height="38" rx="6" fill="#25ff00" filter="url(#glow)"/>
+<text x="65.0" y="608.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#1a1a1a" text-anchor="middle">Cue</text>
+<rect x="96" y="586" width="50" height="38" rx="6" fill="#0033ff" filter="url(#glow)"/>
+<text x="121.0" y="608.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">Cue</text>
+<rect x="152" y="586" width="50" height="38" rx="6" fill="#ff0000" filter="url(#glow)"/>
+<text x="177.0" y="608.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">Cue</text>
+<rect x="208" y="586" width="50" height="38" rx="6" fill="#ff8000" filter="url(#glow)"/>
+<text x="233.0" y="608.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">Loop</text>
+<rect x="40" y="630" width="50" height="38" rx="6" fill="#9500ff" filter="url(#glow)"/>
+<text x="65.0" y="652.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">Cue</text>
+<rect x="96" y="630" width="50" height="38" rx="6" fill="#26262b"/>
+<path d="M102,630 H140 Q146,630 146,636 V662 Q146,668 140,668 Z" fill="#ff8000"/>
+<rect x="96" y="630" width="50" height="38" rx="6" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="121.0" y="652.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#ffffff" stroke="#000000" stroke-width="2.5" paint-order="stroke" text-anchor="middle">Loop</text>
+<rect x="152" y="630" width="50" height="38" rx="6" fill="#26262b"/>
+<rect x="208" y="630" width="50" height="38" rx="6" fill="#26262b"/>
+<rect x="24" y="692" width="1232" height="246" rx="14" fill="#18181d"/>
+<text x="40" y="722" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#ececf1" text-anchor="start">BEAT JUMP</text>
+<text x="190" y="722" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#9a9aa6" text-anchor="start">BEAT JUMP button. PAGE &lt; / &gt; steps through 3 pages; starts on page 2.</text>
+<text x="40" y="744" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#ececf1" text-anchor="start">•  Each size has two pads: left jumps back, right jumps forward.</text>
+<text x="40" y="762" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#ececf1" text-anchor="start">•  Red and orange checkerboard, dim at rest; a held pad lights bright.</text>
+<text x="40" y="794" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#9a9aa6" text-anchor="start">page 1</text>
+<rect x="40" y="802" width="50" height="38" rx="6" fill="#6b1014"/>
+<text x="65.0" y="824.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">FINE &lt;</text>
+<rect x="96" y="802" width="50" height="38" rx="6" fill="#6b1014"/>
+<text x="121.0" y="824.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">FINE &gt;</text>
+<rect x="152" y="802" width="50" height="38" rx="6" fill="#6b3e10"/>
+<text x="177.0" y="824.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">1/8 &lt;</text>
+<rect x="208" y="802" width="50" height="38" rx="6" fill="#6b3e10"/>
+<text x="233.0" y="824.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">1/8 &gt;</text>
+<rect x="40" y="846" width="50" height="38" rx="6" fill="#6b3e10"/>
+<text x="65.0" y="868.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">1/4 &lt;</text>
+<rect x="96" y="846" width="50" height="38" rx="6" fill="#6b3e10"/>
+<text x="121.0" y="868.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">1/4 &gt;</text>
+<rect x="152" y="846" width="50" height="38" rx="6" fill="#6b1014"/>
+<text x="177.0" y="868.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">1/2 &lt;</text>
+<rect x="208" y="846" width="50" height="38" rx="6" fill="#6b1014"/>
+<text x="233.0" y="868.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">1/2 &gt;</text>
+<text x="280" y="794" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#9a9aa6" text-anchor="start">page 2</text>
+<rect x="280" y="802" width="50" height="38" rx="6" fill="#6b1014"/>
+<text x="305.0" y="824.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">1 &lt;</text>
+<rect x="336" y="802" width="50" height="38" rx="6" fill="#6b1014"/>
+<text x="361.0" y="824.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">1 &gt;</text>
+<rect x="392" y="802" width="50" height="38" rx="6" fill="#6b3e10"/>
+<text x="417.0" y="824.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">2 &lt;</text>
+<rect x="448" y="802" width="50" height="38" rx="6" fill="#6b3e10"/>
+<text x="473.0" y="824.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">2 &gt;</text>
+<rect x="280" y="846" width="50" height="38" rx="6" fill="#6b3e10"/>
+<text x="305.0" y="868.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">4 &lt;</text>
+<rect x="336" y="846" width="50" height="38" rx="6" fill="#6b3e10"/>
+<text x="361.0" y="868.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">4 &gt;</text>
+<rect x="392" y="846" width="50" height="38" rx="6" fill="#6b1014"/>
+<text x="417.0" y="868.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">8 &lt;</text>
+<rect x="448" y="846" width="50" height="38" rx="6" fill="#6b1014"/>
+<text x="473.0" y="868.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">8 &gt;</text>
+<text x="520" y="794" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#9a9aa6" text-anchor="start">page 3</text>
+<rect x="520" y="802" width="50" height="38" rx="6" fill="#6b1014"/>
+<text x="545.0" y="824.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">16 &lt;</text>
+<rect x="576" y="802" width="50" height="38" rx="6" fill="#6b1014"/>
+<text x="601.0" y="824.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">16 &gt;</text>
+<rect x="632" y="802" width="50" height="38" rx="6" fill="#6b3e10"/>
+<text x="657.0" y="824.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">32 &lt;</text>
+<rect x="688" y="802" width="50" height="38" rx="6" fill="#6b3e10"/>
+<text x="713.0" y="824.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">32 &gt;</text>
+<rect x="520" y="846" width="50" height="38" rx="6" fill="#6b3e10"/>
+<text x="545.0" y="868.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">64 &lt;</text>
+<rect x="576" y="846" width="50" height="38" rx="6" fill="#6b3e10"/>
+<text x="601.0" y="868.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">64 &gt;</text>
+<rect x="632" y="846" width="50" height="38" rx="6" fill="#6b1014"/>
+<text x="657.0" y="868.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">128 &lt;</text>
+<rect x="688" y="846" width="50" height="38" rx="6" fill="#6b1014"/>
+<text x="713.0" y="868.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">128 &gt;</text>
+<text x="40" y="916" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#9a9aa6" text-anchor="start">rest → held:</text>
+<rect x="132" y="902" width="30" height="20" rx="6" fill="#6b1014"/>
+<text x="170" y="916" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#9a9aa6" text-anchor="start">→</text>
+<rect x="186" y="902" width="30" height="20" rx="6" fill="#ff000b" filter="url(#glow)"/>
+<text x="224" y="916" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">held</text>
+<rect x="302" y="902" width="30" height="20" rx="6" fill="#6b3e10"/>
+<text x="340" y="916" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#9a9aa6" text-anchor="start">→</text>
+<rect x="356" y="902" width="30" height="20" rx="6" fill="#ff6000" filter="url(#glow)"/>
+<text x="394" y="916" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">held</text>
+<rect x="24" y="952" width="1232" height="246" rx="14" fill="#18181d"/>
+<text x="40" y="982" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#ececf1" text-anchor="start">BEAT LOOP</text>
+<text x="190" y="982" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#9a9aa6" text-anchor="start">SHIFT + BEAT JUMP. Two pages.</text>
+<text x="40" y="1004" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#ececf1" text-anchor="start">•  Page 1 yellowish, page 2 orange, dim at rest.</text>
+<text x="40" y="1022" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#ececf1" text-anchor="start">•  The running loop&#x27;s pad, and a held pad, light bright. Press the lit pad again to leave the loop.</text>
+<text x="40" y="1054" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#9a9aa6" text-anchor="start">page 1</text>
+<rect x="40" y="1062" width="50" height="38" rx="6" fill="#6b4310"/>
+<text x="65.0" y="1084.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">1/64</text>
+<rect x="96" y="1062" width="50" height="38" rx="6" fill="#6b4310"/>
+<text x="121.0" y="1084.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">1/32</text>
+<rect x="152" y="1062" width="50" height="38" rx="6" fill="#6b4310"/>
+<text x="177.0" y="1084.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">1/16</text>
+<rect x="208" y="1062" width="50" height="38" rx="6" fill="#6b4310"/>
+<text x="233.0" y="1084.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">1/8</text>
+<rect x="40" y="1106" width="50" height="38" rx="6" fill="#6b4310"/>
+<text x="65.0" y="1128.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">1/4</text>
+<rect x="96" y="1106" width="50" height="38" rx="6" fill="#6b4310"/>
+<text x="121.0" y="1128.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">1/2</text>
+<rect x="152" y="1106" width="50" height="38" rx="6" fill="#6b4310"/>
+<text x="177.0" y="1128.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">1</text>
+<rect x="208" y="1106" width="50" height="38" rx="6" fill="#6b4310"/>
+<text x="233.0" y="1128.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">2</text>
+<text x="280" y="1054" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#9a9aa6" text-anchor="start">page 2</text>
+<rect x="280" y="1062" width="50" height="38" rx="6" fill="#6b3210"/>
+<text x="305.0" y="1084.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">4</text>
+<rect x="336" y="1062" width="50" height="38" rx="6" fill="#6b3210"/>
+<text x="361.0" y="1084.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">8</text>
+<rect x="392" y="1062" width="50" height="38" rx="6" fill="#6b3210"/>
+<text x="417.0" y="1084.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">16</text>
+<rect x="448" y="1062" width="50" height="38" rx="6" fill="#6b3210"/>
+<text x="473.0" y="1084.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">32</text>
+<rect x="280" y="1106" width="50" height="38" rx="6" fill="#6b3210"/>
+<text x="305.0" y="1128.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">64</text>
+<rect x="336" y="1106" width="50" height="38" rx="6" fill="#6b3210"/>
+<text x="361.0" y="1128.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">128</text>
+<rect x="392" y="1106" width="50" height="38" rx="6" fill="#6b3210"/>
+<text x="417.0" y="1128.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">256</text>
+<rect x="448" y="1106" width="50" height="38" rx="6" fill="#6b3210"/>
+<text x="473.0" y="1128.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">512</text>
+<text x="40" y="1176" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#9a9aa6" text-anchor="start">rest → held:</text>
+<rect x="132" y="1162" width="30" height="20" rx="6" fill="#6b4310"/>
+<text x="170" y="1176" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#9a9aa6" text-anchor="start">→</text>
+<rect x="186" y="1162" width="30" height="20" rx="6" fill="#ff8000" filter="url(#glow)"/>
+<text x="224" y="1176" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">running</text>
+<rect x="302" y="1162" width="30" height="20" rx="6" fill="#6b3210"/>
+<text x="340" y="1176" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#9a9aa6" text-anchor="start">→</text>
+<rect x="356" y="1162" width="30" height="20" rx="6" fill="#ff6000" filter="url(#glow)"/>
+<text x="394" y="1176" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">running</text>
+<rect x="24" y="1212" width="1232" height="246" rx="14" fill="#18181d"/>
+<text x="40" y="1242" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#ececf1" text-anchor="start">PAD FX 1</text>
+<text x="190" y="1242" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#9a9aa6" text-anchor="start">PAD FX button. Two pages; effects play while the pad is held.</text>
+<text x="40" y="1264" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#ececf1" text-anchor="start">•  Colours follow rekordbox: dim at rest, bright while held.</text>
+<text x="40" y="1282" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#ececf1" text-anchor="start">•  R = release FX: V.BRAKE / BACKSPIN stop the deck; the R echoes ring out for 8 beats after you let go.</text>
+<text x="40" y="1314" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#9a9aa6" text-anchor="start">page 1</text>
+<rect x="40" y="1322" width="50" height="38" rx="6" fill="#10346b"/>
+<text x="65.0" y="1344.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">ROLL 1/2</text>
+<rect x="96" y="1322" width="50" height="38" rx="6" fill="#10546b"/>
+<text x="121.0" y="1344.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">SWEEP</text>
+<rect x="152" y="1322" width="50" height="38" rx="6" fill="#10546b"/>
+<text x="177.0" y="1344.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">FLANGER</text>
+<rect x="208" y="1322" width="50" height="38" rx="6" fill="#10106b"/>
+<text x="233.0" y="1344.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="9" font-weight="600" fill="#f2f2f2" text-anchor="middle">V.BRAKE R</text>
+<rect x="40" y="1366" width="50" height="38" rx="6" fill="#10226b"/>
+<text x="65.0" y="1388.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">ECHO 1/4</text>
+<rect x="96" y="1366" width="50" height="38" rx="6" fill="#10226b"/>
+<text x="121.0" y="1388.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">ECHO 1/2</text>
+<rect x="152" y="1366" width="50" height="38" rx="6" fill="#1d6b10"/>
+<text x="177.0" y="1388.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">REVERB</text>
+<rect x="208" y="1366" width="50" height="38" rx="6" fill="#10106b"/>
+<text x="233.0" y="1388.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="9" font-weight="600" fill="#f2f2f2" text-anchor="middle">ECHO 1/2 R</text>
+<text x="280" y="1314" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#9a9aa6" text-anchor="start">page 2</text>
+<rect x="280" y="1322" width="50" height="38" rx="6" fill="#10346b"/>
+<text x="305.0" y="1344.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="9" font-weight="600" fill="#f2f2f2" text-anchor="middle">TRANS 1/2</text>
+<rect x="336" y="1322" width="50" height="38" rx="6" fill="#6b1060"/>
+<text x="361.0" y="1344.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">CRUSH</text>
+<rect x="392" y="1322" width="50" height="38" rx="6" fill="#10546b"/>
+<text x="417.0" y="1344.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="9" font-weight="600" fill="#f2f2f2" text-anchor="middle">FILTER LFO</text>
+<rect x="448" y="1322" width="50" height="38" rx="6" fill="#10106b"/>
+<text x="473.0" y="1344.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="9" font-weight="600" fill="#f2f2f2" text-anchor="middle">BACKSPIN R</text>
+<rect x="280" y="1366" width="50" height="38" rx="6" fill="#10226b"/>
+<text x="305.0" y="1388.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">MT DELAY</text>
+<rect x="336" y="1366" width="50" height="38" rx="6" fill="#10226b"/>
+<text x="361.0" y="1388.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">DUB ECHO</text>
+<rect x="392" y="1366" width="50" height="38" rx="6" fill="#1d6b10"/>
+<text x="417.0" y="1388.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">SPACE</text>
+<rect x="448" y="1366" width="50" height="38" rx="6" fill="#10106b"/>
+<text x="473.0" y="1388.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">ECHO 1 R</text>
+<text x="40" y="1436" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#9a9aa6" text-anchor="start">rest → held:</text>
+<rect x="132" y="1422" width="30" height="20" rx="6" fill="#10346b"/>
+<text x="170" y="1436" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#9a9aa6" text-anchor="start">→</text>
+<rect x="186" y="1422" width="30" height="20" rx="6" fill="#0066ff" filter="url(#glow)"/>
+<text x="224" y="1436" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">held</text>
+<rect x="302" y="1422" width="30" height="20" rx="6" fill="#1d6b10"/>
+<text x="340" y="1436" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#9a9aa6" text-anchor="start">→</text>
+<rect x="356" y="1422" width="30" height="20" rx="6" fill="#25ff00" filter="url(#glow)"/>
+<text x="394" y="1436" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">held</text>
+<rect x="472" y="1422" width="30" height="20" rx="6" fill="#6b1060"/>
+<text x="510" y="1436" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#9a9aa6" text-anchor="start">→</text>
+<rect x="526" y="1422" width="30" height="20" rx="6" fill="#ff00df" filter="url(#glow)"/>
+<text x="564" y="1436" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">held</text>
+<rect x="24" y="1472" width="1232" height="246" rx="14" fill="#18181d"/>
+<text x="40" y="1502" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#ececf1" text-anchor="start">PAD FX 2</text>
+<text x="190" y="1502" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#9a9aa6" text-anchor="start">SHIFT + PAD FX. Two pages; each column is 1/16, 1/8, 1/4, 1/2 beat.</text>
+<text x="40" y="1524" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#ececf1" text-anchor="start">•  SLIP LOOP: loop roll with slip. REV ROLL: the same roll played backwards.</text>
+<text x="40" y="1542" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#ececf1" text-anchor="start">•  Dim at rest, bright while held.</text>
+<text x="40" y="1574" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#9a9aa6" text-anchor="start">page 1</text>
+<rect x="40" y="1582" width="50" height="38" rx="6" fill="#10346b"/>
+<text x="65.0" y="1604.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="9" font-weight="600" fill="#f2f2f2" text-anchor="middle">SLIP 1/16</text>
+<rect x="96" y="1582" width="50" height="38" rx="6" fill="#10346b"/>
+<text x="121.0" y="1604.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">SLIP 1/8</text>
+<rect x="152" y="1582" width="50" height="38" rx="6" fill="#10346b"/>
+<text x="177.0" y="1604.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">SLIP 1/4</text>
+<rect x="208" y="1582" width="50" height="38" rx="6" fill="#10346b"/>
+<text x="233.0" y="1604.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">SLIP 1/2</text>
+<rect x="40" y="1626" width="50" height="38" rx="6" fill="#10346b"/>
+<text x="65.0" y="1648.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">REV 1/16</text>
+<rect x="96" y="1626" width="50" height="38" rx="6" fill="#10346b"/>
+<text x="121.0" y="1648.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">REV 1/8</text>
+<rect x="152" y="1626" width="50" height="38" rx="6" fill="#10346b"/>
+<text x="177.0" y="1648.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">REV 1/4</text>
+<rect x="208" y="1626" width="50" height="38" rx="6" fill="#10346b"/>
+<text x="233.0" y="1648.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">REV 1/2</text>
+<text x="280" y="1574" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#9a9aa6" text-anchor="start">page 2</text>
+<rect x="280" y="1582" width="50" height="38" rx="6" fill="#10346b"/>
+<text x="305.0" y="1604.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="9" font-weight="600" fill="#f2f2f2" text-anchor="middle">TRANS 1/16</text>
+<rect x="336" y="1582" width="50" height="38" rx="6" fill="#10346b"/>
+<text x="361.0" y="1604.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="9" font-weight="600" fill="#f2f2f2" text-anchor="middle">TRANS 1/8</text>
+<rect x="392" y="1582" width="50" height="38" rx="6" fill="#10346b"/>
+<text x="417.0" y="1604.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="9" font-weight="600" fill="#f2f2f2" text-anchor="middle">TRANS 1/4</text>
+<rect x="448" y="1582" width="50" height="38" rx="6" fill="#10346b"/>
+<text x="473.0" y="1604.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="9" font-weight="600" fill="#f2f2f2" text-anchor="middle">TRANS 1/2</text>
+<rect x="280" y="1626" width="50" height="38" rx="6" fill="#10226b"/>
+<text x="305.0" y="1648.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">MT 1/16</text>
+<rect x="336" y="1626" width="50" height="38" rx="6" fill="#10226b"/>
+<text x="361.0" y="1648.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">MT 1/8</text>
+<rect x="392" y="1626" width="50" height="38" rx="6" fill="#10226b"/>
+<text x="417.0" y="1648.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">MT 1/4</text>
+<rect x="448" y="1626" width="50" height="38" rx="6" fill="#10226b"/>
+<text x="473.0" y="1648.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">MT 1/2</text>
+<text x="40" y="1696" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#9a9aa6" text-anchor="start">rest → held:</text>
+<rect x="132" y="1682" width="30" height="20" rx="6" fill="#10346b"/>
+<text x="170" y="1696" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#9a9aa6" text-anchor="start">→</text>
+<rect x="186" y="1682" width="30" height="20" rx="6" fill="#0066ff" filter="url(#glow)"/>
+<text x="224" y="1696" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">held</text>
+<rect x="302" y="1682" width="30" height="20" rx="6" fill="#10226b"/>
+<text x="340" y="1696" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#9a9aa6" text-anchor="start">→</text>
+<rect x="356" y="1682" width="30" height="20" rx="6" fill="#0033ff" filter="url(#glow)"/>
+<text x="394" y="1696" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">held</text>
+<rect x="24" y="1732" width="1232" height="202" rx="14" fill="#18181d"/>
+<text x="40" y="1762" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#ececf1" text-anchor="start">KEY SHIFT</text>
+<text x="190" y="1762" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#9a9aa6" text-anchor="start">SHIFT + KEYBOARD. PAGE &lt; / &gt; steps through 5 pages; starts on page 1.</text>
+<text x="40" y="1784" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#ececf1" text-anchor="start">•  Shifts up orange, shifts down blue. The deck&#x27;s current shift blinks (0 blinks with no shift).</text>
+<text x="40" y="1802" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#ececf1" text-anchor="start">•  Page 4: KEY SYNC green, KEY RESET yellow, SEMITONE UP / DOWN amber, dim; bright while held.</text>
+<text x="40" y="1834" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#9a9aa6" text-anchor="start">page -1</text>
+<rect x="40" y="1842" width="50" height="38" rx="6" fill="#ff4000" filter="url(#glow)"/>
+<text x="65.0" y="1864.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">+12</text>
+<rect x="96" y="1842" width="50" height="38" rx="6" fill="#26262b"/>
+<rect x="152" y="1842" width="50" height="38" rx="6" fill="#26262b"/>
+<rect x="208" y="1842" width="50" height="38" rx="6" fill="#26262b"/>
+<rect x="40" y="1886" width="50" height="38" rx="6" fill="#ff4000" filter="url(#glow)"/>
+<text x="65.0" y="1908.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">+8</text>
+<rect x="96" y="1886" width="50" height="38" rx="6" fill="#ff4000" filter="url(#glow)"/>
+<text x="121.0" y="1908.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">+9</text>
+<rect x="152" y="1886" width="50" height="38" rx="6" fill="#ff4000" filter="url(#glow)"/>
+<text x="177.0" y="1908.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">+10</text>
+<rect x="208" y="1886" width="50" height="38" rx="6" fill="#ff4000" filter="url(#glow)"/>
+<text x="233.0" y="1908.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">+11</text>
+<text x="280" y="1834" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#9a9aa6" text-anchor="start">page 1</text>
+<rect x="280" y="1842" width="50" height="38" rx="6" fill="#ff4000" filter="url(#glow)"/>
+<text x="305.0" y="1864.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">+4</text>
+<rect x="336" y="1842" width="50" height="38" rx="6" fill="#ff4000" filter="url(#glow)"/>
+<text x="361.0" y="1864.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">+5</text>
+<rect x="392" y="1842" width="50" height="38" rx="6" fill="#ff4000" filter="url(#glow)"/>
+<text x="417.0" y="1864.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">+6</text>
+<rect x="448" y="1842" width="50" height="38" rx="6" fill="#ff4000" filter="url(#glow)"/>
+<text x="473.0" y="1864.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">+7</text>
+<rect x="280" y="1886" width="50" height="38" rx="6" fill="#26262b"/>
+<path d="M286,1886 H324 Q330,1886 330,1892 V1918 Q330,1924 324,1924 Z" fill="#ff4000"/>
+<rect x="280" y="1886" width="50" height="38" rx="6" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="305.0" y="1908.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#ffffff" stroke="#000000" stroke-width="2.5" paint-order="stroke" text-anchor="middle">0</text>
+<rect x="336" y="1886" width="50" height="38" rx="6" fill="#ff4000" filter="url(#glow)"/>
+<text x="361.0" y="1908.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">+1</text>
+<rect x="392" y="1886" width="50" height="38" rx="6" fill="#ff4000" filter="url(#glow)"/>
+<text x="417.0" y="1908.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">+2</text>
+<rect x="448" y="1886" width="50" height="38" rx="6" fill="#ff4000" filter="url(#glow)"/>
+<text x="473.0" y="1908.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">+3</text>
+<text x="520" y="1834" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#9a9aa6" text-anchor="start">page 2</text>
+<rect x="520" y="1842" width="50" height="38" rx="6" fill="#0066ff" filter="url(#glow)"/>
+<text x="545.0" y="1864.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">-4</text>
+<rect x="576" y="1842" width="50" height="38" rx="6" fill="#0066ff" filter="url(#glow)"/>
+<text x="601.0" y="1864.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">-3</text>
+<rect x="632" y="1842" width="50" height="38" rx="6" fill="#0066ff" filter="url(#glow)"/>
+<text x="657.0" y="1864.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">-2</text>
+<rect x="688" y="1842" width="50" height="38" rx="6" fill="#0066ff" filter="url(#glow)"/>
+<text x="713.0" y="1864.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">-1</text>
+<rect x="520" y="1886" width="50" height="38" rx="6" fill="#0066ff" filter="url(#glow)"/>
+<text x="545.0" y="1908.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">-8</text>
+<rect x="576" y="1886" width="50" height="38" rx="6" fill="#0066ff" filter="url(#glow)"/>
+<text x="601.0" y="1908.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">-7</text>
+<rect x="632" y="1886" width="50" height="38" rx="6" fill="#0066ff" filter="url(#glow)"/>
+<text x="657.0" y="1908.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">-6</text>
+<rect x="688" y="1886" width="50" height="38" rx="6" fill="#0066ff" filter="url(#glow)"/>
+<text x="713.0" y="1908.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">-5</text>
+<text x="760" y="1834" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#9a9aa6" text-anchor="start">page 3</text>
+<rect x="760" y="1842" width="50" height="38" rx="6" fill="#0066ff" filter="url(#glow)"/>
+<text x="785.0" y="1864.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">-12</text>
+<rect x="816" y="1842" width="50" height="38" rx="6" fill="#0066ff" filter="url(#glow)"/>
+<text x="841.0" y="1864.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">-11</text>
+<rect x="872" y="1842" width="50" height="38" rx="6" fill="#0066ff" filter="url(#glow)"/>
+<text x="897.0" y="1864.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">-10</text>
+<rect x="928" y="1842" width="50" height="38" rx="6" fill="#0066ff" filter="url(#glow)"/>
+<text x="953.0" y="1864.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">-9</text>
+<rect x="760" y="1886" width="50" height="38" rx="6" fill="#26262b"/>
+<rect x="816" y="1886" width="50" height="38" rx="6" fill="#26262b"/>
+<rect x="872" y="1886" width="50" height="38" rx="6" fill="#26262b"/>
+<rect x="928" y="1886" width="50" height="38" rx="6" fill="#26262b"/>
+<text x="1000" y="1834" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#9a9aa6" text-anchor="start">page 4</text>
+<rect x="1000" y="1842" width="50" height="38" rx="6" fill="#106b10"/>
+<text x="1025.0" y="1864.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">KEY SYNC</text>
+<rect x="1056" y="1842" width="50" height="38" rx="6" fill="#6b5410"/>
+<text x="1081.0" y="1864.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#f2f2f2" text-anchor="middle">SEMI UP</text>
+<rect x="1112" y="1842" width="50" height="38" rx="6" fill="#ff4000" filter="url(#glow)"/>
+<text x="1137.0" y="1864.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">+7</text>
+<rect x="1168" y="1842" width="50" height="38" rx="6" fill="#ff4000" filter="url(#glow)"/>
+<text x="1193.0" y="1864.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">+12</text>
+<rect x="1000" y="1886" width="50" height="38" rx="6" fill="#6b6b10"/>
+<text x="1025.0" y="1908.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="9" font-weight="600" fill="#f2f2f2" text-anchor="middle">KEY RESET</text>
+<rect x="1056" y="1886" width="50" height="38" rx="6" fill="#6b5410"/>
+<text x="1081.0" y="1908.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="9" font-weight="600" fill="#f2f2f2" text-anchor="middle">SEMI DOWN</text>
+<rect x="1112" y="1886" width="50" height="38" rx="6" fill="#0066ff" filter="url(#glow)"/>
+<text x="1137.0" y="1908.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">-5</text>
+<rect x="1168" y="1886" width="50" height="38" rx="6" fill="#0066ff" filter="url(#glow)"/>
+<text x="1193.0" y="1908.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">-12</text>
+<rect x="24" y="1948" width="1232" height="184" rx="14" fill="#18181d"/>
+<text x="40" y="1978" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#ececf1" text-anchor="start">SAMPLER</text>
+<text x="190" y="1978" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#9a9aa6" text-anchor="start">SAMPLER button. SHIFT + PAGE &lt; / &gt; changes the bank of 8.</text>
+<text x="40" y="2000" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#ececf1" text-anchor="start">•  A loaded slot is magenta and blinks white while it plays. Empty slots are off.</text>
+<text x="40" y="2032" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="600" fill="#9a9aa6" text-anchor="start">example</text>
+<rect x="40" y="2040" width="50" height="38" rx="6" fill="#ff00ff" filter="url(#glow)"/>
+<text x="65.0" y="2062.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">loaded</text>
+<rect x="96" y="2040" width="50" height="38" rx="6" fill="#26262b"/>
+<path d="M102,2040 H140 Q146,2040 146,2046 V2072 Q146,2078 140,2078 Z" fill="#ff00ff"/>
+<rect x="96" y="2040" width="50" height="38" rx="6" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="121.0" y="2062.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#ffffff" stroke="#000000" stroke-width="2.5" paint-order="stroke" text-anchor="middle">playing</text>
+<rect x="152" y="2040" width="50" height="38" rx="6" fill="#ff00ff" filter="url(#glow)"/>
+<text x="177.0" y="2062.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">loaded</text>
+<rect x="208" y="2040" width="50" height="38" rx="6" fill="#26262b"/>
+<rect x="40" y="2084" width="50" height="38" rx="6" fill="#26262b"/>
+<rect x="96" y="2084" width="50" height="38" rx="6" fill="#ff00ff" filter="url(#glow)"/>
+<text x="121.0" y="2106.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">loaded</text>
+<rect x="152" y="2084" width="50" height="38" rx="6" fill="#26262b"/>
+<rect x="208" y="2084" width="50" height="38" rx="6" fill="#26262b"/>
+<rect x="24" y="2146" width="1232" height="210" rx="14" fill="#18181d"/>
+<text x="40" y="2176" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#ececf1" text-anchor="start">LOOP BUTTONS</text>
+<text x="190" y="2176" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#9a9aa6" text-anchor="start">LOOP IN, LOOP OUT and 4 BEAT / EXIT (and their SHIFT functions).</text>
+<text x="370" y="2206" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#9a9aa6" text-anchor="middle">LOOP IN</text>
+<text x="490" y="2206" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#9a9aa6" text-anchor="middle">LOOP OUT</text>
+<text x="610" y="2206" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#9a9aa6" text-anchor="middle">4 BEAT</text>
+<text x="40" y="2233" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#ececf1" text-anchor="start">No loop</text>
+<rect x="340" y="2218" width="60" height="22" rx="6" fill="#f4f4f6" filter="url(#glow)"/>
+<text x="370.0" y="2232.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#1a1a1a" text-anchor="middle">lit</text>
+<rect x="460" y="2218" width="60" height="22" rx="6" fill="#f4f4f6" filter="url(#glow)"/>
+<text x="490.0" y="2232.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#1a1a1a" text-anchor="middle">lit</text>
+<rect x="580" y="2218" width="60" height="22" rx="6" fill="#f4f4f6" filter="url(#glow)"/>
+<text x="610.0" y="2232.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#1a1a1a" text-anchor="middle">lit</text>
+<text x="40" y="2263" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#ececf1" text-anchor="start">LOOP IN pressed</text>
+<rect x="340" y="2248" width="60" height="22" rx="6" fill="#26262b"/>
+<path d="M346,2248 H394 Q400,2248 400,2254 V2264 Q400,2270 394,2270 Z" fill="#f4f4f6"/>
+<rect x="340" y="2248" width="60" height="22" rx="6" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="370.0" y="2262.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#ffffff" stroke="#000000" stroke-width="2.5" paint-order="stroke" text-anchor="middle">blink</text>
+<rect x="460" y="2248" width="60" height="22" rx="6" fill="#f4f4f6" filter="url(#glow)"/>
+<text x="490.0" y="2262.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#1a1a1a" text-anchor="middle">lit</text>
+<rect x="580" y="2248" width="60" height="22" rx="6" fill="#f4f4f6" filter="url(#glow)"/>
+<text x="610.0" y="2262.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#1a1a1a" text-anchor="middle">lit</text>
+<text x="40" y="2293" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#ececf1" text-anchor="start">Loop running</text>
+<rect x="340" y="2278" width="60" height="22" rx="6" fill="#26262b"/>
+<path d="M346,2278 H394 Q400,2278 400,2284 V2294 Q400,2300 394,2300 Z" fill="#f4f4f6"/>
+<rect x="340" y="2278" width="60" height="22" rx="6" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="370.0" y="2292.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#ffffff" stroke="#000000" stroke-width="2.5" paint-order="stroke" text-anchor="middle">blink</text>
+<rect x="460" y="2278" width="60" height="22" rx="6" fill="#26262b"/>
+<path d="M466,2278 H514 Q520,2278 520,2284 V2294 Q520,2300 514,2300 Z" fill="#f4f4f6"/>
+<rect x="460" y="2278" width="60" height="22" rx="6" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="490.0" y="2292.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#ffffff" stroke="#000000" stroke-width="2.5" paint-order="stroke" text-anchor="middle">blink</text>
+<rect x="580" y="2278" width="60" height="22" rx="6" fill="#26262b"/>
+<path d="M586,2278 H634 Q640,2278 640,2284 V2294 Q640,2300 634,2300 Z" fill="#f4f4f6"/>
+<rect x="580" y="2278" width="60" height="22" rx="6" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="610.0" y="2292.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#ffffff" stroke="#000000" stroke-width="2.5" paint-order="stroke" text-anchor="middle">blink</text>
+<text x="40" y="2323" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="normal" fill="#ececf1" text-anchor="start">Moving loop in (SHIFT + LOOP IN)</text>
+<rect x="340" y="2308" width="60" height="22" rx="6" fill="#26262b"/>
+<path d="M346,2308 H394 Q400,2308 400,2314 V2324 Q400,2330 394,2330 Z" fill="#f4f4f6"/>
+<rect x="340" y="2308" width="60" height="22" rx="6" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="370.0" y="2322.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#ffffff" stroke="#000000" stroke-width="2.5" paint-order="stroke" text-anchor="middle">blink</text>
+<rect x="460" y="2308" width="60" height="22" rx="6" fill="#f4f4f6" filter="url(#glow)"/>
+<text x="490.0" y="2322.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#1a1a1a" text-anchor="middle">lit</text>
+<rect x="580" y="2308" width="60" height="22" rx="6" fill="#f4f4f6" filter="url(#glow)"/>
+<text x="610.0" y="2322.5" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="10" font-weight="600" fill="#1a1a1a" text-anchor="middle">lit</text>
+<text x="40" y="2386" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" fill="#9a9aa6" text-anchor="start">Colours are drawn from the mapping&#x27;s colour numbers and hue table; the unit&#x27;s LEDs may look a little different. Generated by tools/pad_colour_flyer.py.</text>
+</svg>

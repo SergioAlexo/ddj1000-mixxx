@@ -15,6 +15,7 @@ This repo is protocol only. The Mixxx mapping that uses it lives in the Mixxx fo
 | [`JOG_DISPLAY_PROTOCOL.md`](JOG_DISPLAY_PROTOCOL.md) | How it all works: the two modes, the unlock chain, the handshake, every message in use, the order rekordbox sends them, and notes for driving it from Mixxx. **Only facts confirmed on the unit.** |
 | [`PROTOCOL_REFERENCE.md`](PROTOCOL_REFERENCE.md) | Byte-by-byte tables of every SysEx and HID message found in the captures, including unknown bytes and messages we only know exist. Each byte is tagged confirmed / capture / unknown. |
 | [`REKORDBOX_LEDS.md`](REKORDBOX_LEDS.md) | What rekordbox sends to the pad and button LEDs (colour numbers per pad mode, init writes). |
+| [`PAD_COLOURS.md`](PAD_COLOURS.md) | Flyer: what every pad colour means in the Mixxx mapping, mode by mode and page by page, with colour names. |
 | [`CAPTURING.md`](CAPTURING.md) | How to record and decode USB captures, the list of existing captures, the analysis and probe tools, and what still needs capturing. |
 | [`firmware/`](firmware/README.md) | Firmware analysis: extracting the CPU images from Pioneer's updater, Ghidra scripts and saved function names, and the notes the handshake and message layouts came from. |
 
