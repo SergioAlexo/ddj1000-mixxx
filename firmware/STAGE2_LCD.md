@@ -68,7 +68,7 @@ Multi-byte integers are **little-endian**.
 |---|---|
 | 2 | flag bits 0x10, 0x08, 0x02, 0x01 (play/cue/sync/master-type flags) **[guess]** |
 | 3 | flag bits 0x10, 0x08, 0x02 **[guess]** |
-| 4 | bits 4–6: tempo-range index + 1 **[inferred]** |
+| 4 | bits 4–6: guessed as tempo-range index + 1 — **wrong as such**: rekordbox sends 0x21 only in the first frames after start-up (all captures), then 0x11; sending 0x21 continuously makes the jog-screen platter spin nonstop. Keep 0x11. |
 | 5 | bit7 flag, bits 4–5 2-bit mode |
 | 9 | *validity mask*: 0x80 times, 0x20 BPM, 0x10 tempo, 0x08 position/length, 0x04 extra position |
 | 10 | 0–22 index (key or similar) |
