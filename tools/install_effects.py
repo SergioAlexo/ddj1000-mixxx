@@ -88,18 +88,46 @@ UNIT_PRESETS = [
     ("DDJ Beat - Mobius Tri", [
         ("flanger", {"speed": 16.0, "regen": 0.8, "mix": (1.0, "NONE")}),
     ]),
-    ("DDJ Pad - HPF", [
-        ("filter", {"lpf": (22050, "NONE"), "q": 1.2, "hpf": (1200, "NONE")}),
+    # PAD FX, in rekordbox's order (the mapping's padFxPresets lists the same
+    # names). The number after each rekordbox name is its beat length or amount.
+    ("DDJ Pad - Sweep", [
+        ("filter", {"lpf": (22050, "NONE"), "q": 2.5, "hpf": (900, "NONE")}),
     ]),
-    ("DDJ Pad - LPF", [
-        ("filter", {"lpf": (600, "NONE"), "q": 1.2, "hpf": (13, "NONE")}),
+    ("DDJ Pad - Flanger", [
+        ("flanger", {"speed": 16.0, "regen": 0.6, "mix": (1.0, "NONE")}),
+    ]),
+    ("DDJ Pad - Echo 1/4", [
+        ("echo", {"delay_time": 0.25, "feedback_amount": 0.55, "send_amount": (1.0, "NONE")}),
+    ]),
+    ("DDJ Pad - Echo 1/2", [
+        ("echo", {"delay_time": 0.5, "feedback_amount": 0.6, "send_amount": (1.0, "NONE")}),
+    ]),
+    ("DDJ Pad - Echo 1", [
+        ("echo", {"delay_time": 1.0, "feedback_amount": 0.6, "send_amount": (1.0, "NONE")}),
+    ]),
+    ("DDJ Pad - Reverb", [
+        ("reverb", {"decay": 0.5, "damping": 0.3, "send_amount": (1.0, "NONE")}),
+    ]),
+    ("DDJ Pad - Trans", [
+        ("tremolo", {"depth": (1.0, "NONE"), "rate": 2.0, "width": 0.5, "waveform": 0.005}),
     ]),
     ("DDJ Pad - Crush", [
-        ("bitcrusher", {"bit_depth": (6, "NONE"), "downsample": (0.25, "NONE")}),
+        ("bitcrusher", {"bit_depth": (7, "NONE"), "downsample": (0.4, "NONE")}),
     ]),
-    ("DDJ Pad - Noise", [
-        ("whitenoise", {"dry_wet": (0.35, "NONE")}),
-        ("filter", {"lpf": (22050, "NONE"), "hpf": (800, "NONE")}),
+    ("DDJ Pad - Filter LFO", [
+        ("phaser", {"lfo_period": 4.0, "feedback": 0.7, "stages": 4, "depth": (1.0, "NONE")}),
+    ]),
+    ("DDJ Pad - MT Delay", [
+        ("echo", {"delay_time": 0.125, "feedback_amount": 0.5, "pingpong_amount": 0.8,
+                  "send_amount": (1.0, "NONE")}),
+    ]),
+    ("DDJ Pad - Dub Echo", [
+        ("echo", {"delay_time": 0.75, "feedback_amount": 0.75, "send_amount": (1.0, "NONE")}),
+        ("filter", {"lpf": (22050, "NONE"), "hpf": (300, "NONE")}),
+    ]),
+    ("DDJ Pad - Space", [
+        ("reverb", {"decay": 0.9, "damping": 0.2, "send_amount": (0.3, "NONE")}),
+        ("echo", {"delay_time": 1.0, "feedback_amount": 0.4, "send_amount": (0.3, "NONE")}),
     ]),
 ]
 
