@@ -8,6 +8,11 @@ screens from open software, with no rekordbox and no firmware changes.
 This repo is protocol only. The Mixxx mapping that uses it lives in the Mixxx fork:
 **[sergioalexo/mixxx, branch `ddj-1000-jog-displays`](https://github.com/sergioalexo/mixxx/tree/ddj-1000-jog-displays)**.
 
+![DDJ-1000 jog-screen protocol on one page: the three USB channels, the six steps from logo to waveform, and which message draws which part of the jog screen](docs/protocol.svg)
+
+The whole protocol on one page. It is generated: `python tools/protocol_flyer.py` rewrites
+`docs/protocol.svg`; update the script when the protocol notes change.
+
 ## Documents
 
 | File | What it is |
@@ -43,6 +48,7 @@ The ordinary MIDI controls (buttons, knobs, faders, LEDs) are in AlphaTheta's
 | `tools/ddj_cert.py` | any | Handshake crypto; run it for a self-test. |
 | `tools/ddj_jog.py` | any | HID packet builders; `python tools/ddj_jog.py selftest`. |
 | `tools/ddj_jog_initdata.py` | any | Bundled init data used by `ddj_jog_live.py`. |
+| `tools/protocol_flyer.py` | any | Draws the one-page protocol diagram, `docs/protocol.svg`. `python tools/protocol_flyer.py` |
 | `tools/install_effects.py` | Windows, macOS, Linux | Installs the DDJ BEAT FX / PAD FX / SOUND COLOR FX effect presets that the fork's mapping expects. Quit Mixxx first. `python tools/install_effects.py [--dry-run] [--settings DIR]` |
 | capture, analysis and probe tools | Windows / any | See [`CAPTURING.md`](CAPTURING.md). |
 
